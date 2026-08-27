@@ -13,6 +13,7 @@ describe('QA 476b6f7 release contract', () => {
     const headers = await text('../site/public/_headers');
     const staticWebApp = JSON.parse(await text('../site/public/staticwebapp.config.json')) as {
       globalHeaders: Record<string, string>;
+      mimeTypes: Record<string, string>;
       routes: Array<{ route: string; headers: Record<string, string> }>;
     };
     expect(headers).toContain("Content-Security-Policy: default-src 'self'");
@@ -21,6 +22,7 @@ describe('QA 476b6f7 release contract', () => {
     expect(headers).toContain('Content-Type: application/manifest+json; charset=utf-8');
     expect(staticWebApp.globalHeaders['Content-Security-Policy']).toContain("default-src 'self'");
     expect(staticWebApp.globalHeaders['Permissions-Policy']).toContain('camera=()');
+    expect(staticWebApp.mimeTypes['.webmanifest']).toBe('application/manifest+json');
     expect(staticWebApp.routes).toContainEqual({ route: '/assets/*', headers: { 'Cache-Control': 'public, max-age=31536000, immutable' } });
     expect(staticWebApp.routes).toContainEqual({ route: '/manifest.webmanifest', headers: {
       'Content-Type': 'application/manifest+json; charset=utf-8',
