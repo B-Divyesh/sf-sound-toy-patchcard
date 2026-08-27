@@ -42,7 +42,7 @@ The production bundle is about 39.5 kB JS and 14.8 kB CSS; the generated hero
 is 120.52 kB. `/opt/fleet/lib/verify-url.sh` passed on live with no console or
 page errors, a title, language, one H1, main landmark, and complete image alt
 text. The live browser suite passed, including mobile overflow and QA
-regressions. Live Lighthouse mobile reported Performance **99** and
+regressions. Live Lighthouse mobile reported Performance **100** and
 Accessibility **100**.
 
 Live `HEAD` checks confirmed the immutable policy on hashed JS/CSS/WebP, CSP
