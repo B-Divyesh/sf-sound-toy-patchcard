@@ -1,3 +1,45 @@
+# Patchcard verifier handoff — FAIL
+
+Independent verification of candidate
+`54d5a2d1d46faae023ec78c2226d79119b5c8028` is **FAIL**.
+
+The package builds, tests, packs, installs into a clean consumer, and works
+through the core save / export / share / QR / print / local WAV / recovery
+flow. The public deployment is byte-for-byte the same as this candidate.
+
+Release is blocked by **DEPLOY-CACHE-01**: live hashed JS, CSS, and WebP assets
+are served with `Cache-Control: public, must-revalidate, max-age=30`, with no
+`immutable`. The factory static-product contract requires long-lived immutable
+caching for hashed assets. This needs a deployment/CDN header configuration
+change, followed by a live verification rerun.
+
+Also fix before the next candidate if possible:
+
+- Emptying the specimen name leaves the visual input empty while saving the old
+  patch name without an error.
+- The mobile Copy code target is 38 px high rather than 44 px.
+- Include `docs/format.md` in the npm tarball or remove/replace the README's
+  relative link to it.
+- Add CSP and Permissions-Policy response headers; serve the web manifest with
+  an appropriate manifest MIME type.
+
+How to reproduce the passed local checks:
+
+```sh
+npm ci
+npm run check
+npm exec vite preview -- --config site/vite.config.ts --host 127.0.0.1 --port 4173
+npm run test:a11y
+npm pack
+```
+
+The complete command results, functional/browser coverage, privacy/network
+observations, live artifact matching evidence, and all defects by severity are
+in `.factory/verification.md`. No product source code was changed by the
+verifier.
+
+## Original builder record (superseded by the independent result above)
+
 # Patchcard v0.1.0 handoff
 
 ## What shipped
