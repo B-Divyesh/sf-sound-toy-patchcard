@@ -3,7 +3,7 @@
 ## What changed
 
 - Repaired every finding from QA report `476b6f7fd54487f6e3625889d9a6a8fcfb63f88b` for candidate `54d5a2d1d46faae023ec78c2226d79119b5c8028`.
-- Added standard static-docs response rules in `site/public/_headers`: a restrictive CSP, a Permissions-Policy, `nosniff`, and the correct `application/manifest+json; charset=utf-8` manifest MIME. Build-hashed `/assets/*` now receive `Cache-Control: public, max-age=31536000, immutable`.
+- Added Standard Static Web Apps response rules in `site/public/staticwebapp.config.json` (and portable `_headers`): a restrictive CSP, a Permissions-Policy, `nosniff`, and the correct `application/manifest+json; charset=utf-8` manifest MIME. Build-hashed `/assets/*` now receive `Cache-Control: public, max-age=31536000, immutable`.
 - Moved the original generated herbarium image into the Vite asset graph. Production now emits it with a content hash alongside JS and CSS; the service-worker cache was versioned while preserving offline shell behavior.
 - Made the demo’s specimen name an accessible required field. Clearing it produces an announced, visible error and causes the host save adapter to reject the save, so the visible blank value can never silently save an older name. The widget now supports an optional `onSave` return value of `false` for host validation failures.
 - Raised the mobile **Copy code** control to a minimum 44 × 44 CSS-pixel target.
@@ -33,7 +33,7 @@ Verified on 2026-08-27:
 
 ## Deploy
 
-Deploy `dist/site` as Standard static docs, including its `_headers` file. The package is ready for the factory to publish with `npm pack` / `npm publish`; no registry publish was performed here.
+Deploy `dist/site` as Standard static docs, including its `staticwebapp.config.json` (and portable `_headers`) file. The package is ready for the factory to publish with `npm pack` / `npm publish`; no registry publish was performed here.
 
 After the deployment completes, verify the response contract:
 

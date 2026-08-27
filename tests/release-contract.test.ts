@@ -11,10 +11,21 @@ describe('QA 476b6f7 release contract', () => {
 
   it('declares immutable hashed-asset caching and browser security policies', async () => {
     const headers = await text('../site/public/_headers');
+    const staticWebApp = JSON.parse(await text('../site/public/staticwebapp.config.json')) as {
+      globalHeaders: Record<string, string>;
+      routes: Array<{ route: string; headers: Record<string, string> }>;
+    };
     expect(headers).toContain("Content-Security-Policy: default-src 'self'");
     expect(headers).toContain('Permissions-Policy:');
     expect(headers).toMatch(/\/assets\/\*\n  Cache-Control: public, max-age=31536000, immutable/u);
     expect(headers).toContain('Content-Type: application/manifest+json; charset=utf-8');
+    expect(staticWebApp.globalHeaders['Content-Security-Policy']).toContain("default-src 'self'");
+    expect(staticWebApp.globalHeaders['Permissions-Policy']).toContain('camera=()');
+    expect(staticWebApp.routes).toContainEqual({ route: '/assets/*', headers: { 'Cache-Control': 'public, max-age=31536000, immutable' } });
+    expect(staticWebApp.routes).toContainEqual({ route: '/manifest.webmanifest', headers: {
+      'Content-Type': 'application/manifest+json; charset=utf-8',
+      'Cache-Control': 'public, max-age=86400, must-revalidate'
+    } });
   });
 
   it('keeps the mobile Copy code control at the required touch-target size', async () => {
