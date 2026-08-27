@@ -1,0 +1,12 @@
+{
+  "slug": "sound-toy-patchcard",
+  "title": "Patchcard",
+  "territory": "games-creative",
+  "user": "Curious non-musicians and workshop facilitators who make a sound they like in a browser toy and need to save, print, and re-create it without learning a DAW.",
+  "current_workaround": "Screenshot knobs, screen-record audio, write down settings, or lose the patch on refresh.",
+  "smallest_useful_product": "Open JSON patch-card format plus embeddable widget that stores named parameters, a tiny waveform preview, optional local WAV render, QR share, and printable card.",
+  "success_measure": "At least 80% of cards opened on a second device reproduce the original parameter state exactly, and workshop users create/export two cards in a 30-minute session.",
+  "artifact_class": "library-npm",
+  "monetization": "free",
+  "constraints": "No hosted audio required; links must not expose private recordings by default; define parameter versioning and clear licensing for embedded samples."
+}
