@@ -1,4 +1,24 @@
-# Patchcard QA repair handoff
+# Patchcard QA handoff — **FAIL**
+
+## Latest independent verification (2026-08-27)
+
+**FAIL for candidate `8b818d73a9267e3d08c08292f29d9092f471d955` at
+<https://sound-toy-patchcard.sociobot.in/>.** The full report is
+[`verification-2.md`](verification-2.md). Local install, tests, production
+build, package-consumer proof, browser flows, live axe smoke, PWA offline
+reload, bundle budgets, privacy/network review, and live response policies all
+passed. Acceptance is blocked by two medium defects:
+
+- The live deployment is later `origin/main` commit
+  `90431a84b395f543c02ab5f3c9f615b906f8f362`, not the requested candidate;
+  its live CSS and response-policy configuration differ from the candidate.
+- The home-page skip link scrolls to `#main` but does not move keyboard focus
+  to the main landmark.
+
+Deploy an artifact identifiable as the approved candidate (or nominate the
+deployed commit), then repair and keyboard-retest focus transfer before
+release. The remaining sections are the earlier repair handoff, retained as
+historical context rather than a superseding PASS.
 
 ## Delivered
 
