@@ -34,7 +34,7 @@
           <p class="privacy-note"><span aria-hidden="true">●</span> Local-first. Shared links contain settings, not audio.</p>
         </div>
         <figure class="hero__specimen">
-          <img src="/patchcard-herbarium.webp" width="1280" height="853" alt="A waveform shaped like fern veins pinned among pressed leaves on a field-guide folio" fetchpriority="high">
+          <img src="./assets/patchcard-herbarium.webp" width="1280" height="853" alt="A waveform shaped like fern veins pinned among pressed leaves on a field-guide folio" fetchpriority="high">
           <figcaption>Specimen PC–001 · waveform study</figcaption>
         </figure>
       </section>
@@ -50,7 +50,8 @@
           <div class="bench-main">
             <div class="toy-toolbar" aria-label="Demo sound controls">
               <label for="patch-name">Specimen name</label>
-              <input id="patch-name" maxlength="120" value="Moss radio">
+              <input id="patch-name" maxlength="120" value="Moss radio" required aria-describedby="patch-name-error">
+              <p class="field-error" id="patch-name-error" data-name-error role="status" hidden>Enter a specimen name before saving. The card keeps its last valid name until you do.</p>
               <button class="button button--listen" type="button" data-play><span aria-hidden="true">▶</span> Hear this sound</button>
               <button class="button" type="button" data-new>Start a new card</button>
             </div>

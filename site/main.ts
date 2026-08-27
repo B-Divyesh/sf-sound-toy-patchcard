@@ -46,6 +46,7 @@ if (shareCode) {
 }
 
 const nameInput = document.querySelector<HTMLInputElement>('#patch-name')!;
+const nameError = document.querySelector<HTMLElement>('[data-name-error]')!;
 nameInput.value = initialPatch.name;
 const widgetRoot = document.querySelector<HTMLElement>('#patch-widget')!;
 let widget: PatchcardWidget;
@@ -105,6 +106,7 @@ function persist(patch: PatchCard): void {
 
 function mount(patch: PatchCard): void {
   nameInput.value = patch.name;
+  setNameValidity(true);
   if (widget) widget.destroy();
   widget = mountPatchcard(widgetRoot, {
     patch,
@@ -118,10 +120,30 @@ function mount(patch: PatchCard): void {
 mount(initialPatch);
 renderSaved();
 
-nameInput.addEventListener('input', () => {
+function setNameValidity(valid: boolean): boolean {
+  if (valid) nameInput.removeAttribute('aria-invalid');
+  else nameInput.setAttribute('aria-invalid', 'true');
+  nameError.hidden = valid;
+  return valid;
+}
+
+function syncName(): boolean {
   const value = nameInput.value.trim();
-  if (value) widget.setPatch({ ...widget.getPatch(), name: value });
-});
+  if (!value) return setNameValidity(false);
+  setNameValidity(true);
+  if (widget.getPatch().name !== value) widget.setPatch({ ...widget.getPatch(), name: value });
+  return true;
+}
+
+nameInput.addEventListener('input', syncName);
+
+widgetRoot.addEventListener('click', (event) => {
+  if (!(event.target as Element).closest<HTMLButtonElement>('[data-pc-action="save"]')) return;
+  if (!syncName()) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+  }
+}, true);
 
 document.querySelector('[data-play]')!.addEventListener('click', async (event) => {
   const button = event.currentTarget as HTMLButtonElement;

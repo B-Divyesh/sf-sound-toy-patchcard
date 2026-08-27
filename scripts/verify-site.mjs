@@ -12,6 +12,16 @@ page.on('pageerror', (error) => consoleErrors.push(error.message));
 try {
   await page.goto(base, { waitUntil: 'networkidle' });
   await page.locator('#patch-widget[aria-busy="false"]').waitFor();
+  const name = page.getByLabel('Specimen name');
+  await name.fill('');
+  await page.getByRole('button', { name: 'Save specimen' }).click();
+  if (await name.getAttribute('aria-invalid') !== 'true' || !(await page.locator('[data-name-error]').isVisible())) {
+    throw new Error('An empty specimen name is not visibly rejected.');
+  }
+  if (await page.getByRole('button', { name: /^Moss radio Field oscillator/u }).count()) {
+    throw new Error('An empty specimen name saved the stale card name.');
+  }
+  await name.fill('Moss radio');
   await page.locator('[data-pc-param="pitch"]').fill('330');
   await page.getByRole('button', { name: 'Save specimen' }).click();
   await page.getByRole('button', { name: /^Moss radio Field oscillator/u }).waitFor();
@@ -36,6 +46,10 @@ try {
 
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(base, { waitUntil: 'networkidle' });
+  const copyCode = await page.getByRole('button', { name: 'Copy code' }).boundingBox();
+  if (!copyCode || copyCode.width < 44 || copyCode.height < 44) {
+    throw new Error(`Copy code touch target is ${copyCode?.width ?? 0}×${copyCode?.height ?? 0}px; expected at least 44×44px.`);
+  }
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   if (overflow > 1) throw new Error(`Mobile layout overflows by ${overflow}px.`);
   if (consoleErrors.length) throw new Error(`Console errors: ${consoleErrors.join(' | ')}`);

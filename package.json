@@ -25,6 +25,7 @@
     "dist/index.d.ts",
     "dist/style.css",
     "schema",
+    "docs/format.md",
     "README.md",
     "CHANGELOG.md",
     "LICENSE"
