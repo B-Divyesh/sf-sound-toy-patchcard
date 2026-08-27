@@ -60,7 +60,9 @@ h1 { max-width: 720px; margin: 0; font-size: clamp(48px, 7vw, 82px); line-height
 .bench-main { min-width: 0; }
 .toy-toolbar { display: grid; grid-template-columns: auto minmax(120px, 1fr) auto auto; gap: 8px; align-items: center; padding: 12px; background: var(--pale); color: var(--ink); border-bottom: 4px solid var(--saffron); }
 .toy-toolbar label { padding-inline: 4px; font-size: 14px; font-weight: 800; }
-.toy-toolbar input { min-height: 44px; min-width: 0; border: 1px solid var(--ink); background: var(--folio); color: var(--ink); padding: 8px 10px; }
+.toy-name-field { min-width: 0; }
+.toy-toolbar input { min-height: 44px; min-width: 0; width: 100%; border: 1px solid var(--ink); background: var(--folio); color: var(--ink); padding: 8px 10px; }
+.field-error { margin: 4px 4px 0; color: #7d2921; font-size: 14px; font-weight: 700; line-height: 1.3; }
 .button--listen { background: var(--saffron); color: #262113; }
 #patch-widget { color: var(--ink); }
 #patch-widget .patchcard__sheet { border-top: 0; }
@@ -100,7 +102,7 @@ h1 { max-width: 720px; margin: 0; font-size: clamp(48px, 7vw, 82px); line-height
 .checklist li::before { content: "✓"; margin-right: 8px; color: var(--fern); font-weight: 900; }
 .code-sample { min-width: 0; border: 1px solid var(--ink); background: var(--ink); color: #f7f1de; box-shadow: 10px 10px 0 #2f6b5040; }
 .code-sample__bar { min-height: 48px; display: flex; justify-content: space-between; align-items: center; padding: 4px 12px 4px 18px; border-bottom: 1px solid #f3eedc4d; color: #d7d2bd; font-size: 14px; }
-.code-sample__bar button { min-height: 38px; border: 1px solid #f3eedc66; background: transparent; color: white; cursor: pointer; }
+.code-sample__bar button { min-width: 44px; min-height: 44px; border: 1px solid #f3eedc66; background: transparent; color: white; cursor: pointer; }
 pre { margin: 0; padding: clamp(20px, 4vw, 36px); overflow: auto; font: 14px/1.7 ui-monospace, "SFMono-Regular", Consolas, monospace; }
 footer { max-width: 1240px; min-height: 180px; margin: auto; padding: 48px 32px; display: flex; justify-content: space-between; gap: 40px; color: var(--bark); }
 footer p { margin: 8px 0 0; }

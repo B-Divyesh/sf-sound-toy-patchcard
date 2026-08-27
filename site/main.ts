@@ -46,6 +46,7 @@ if (shareCode) {
 }
 
 const nameInput = document.querySelector<HTMLInputElement>('#patch-name')!;
+const nameError = document.querySelector<HTMLElement>('[data-name-error]')!;
 nameInput.value = initialPatch.name;
 const widgetRoot = document.querySelector<HTMLElement>('#patch-widget')!;
 let widget: PatchcardWidget;
@@ -97,14 +98,36 @@ function escapeHtml(value: string): string {
   return value.replace(/[&<>"']/gu, (match) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[match]!);
 }
 
-function persist(patch: PatchCard): void {
-  saved = [structuredClone(patch), ...saved.filter((item) => item.id !== patch.id)].slice(0, 30);
+function setNameError(message = ''): void {
+  const invalid = Boolean(message);
+  nameInput.setCustomValidity(message);
+  nameInput.setAttribute('aria-invalid', String(invalid));
+  nameError.hidden = !invalid;
+  nameError.textContent = message;
+}
+
+function visibleName(): string | undefined {
+  const name = nameInput.value.trim();
+  if (name) {
+    setNameError();
+    return name;
+  }
+  setNameError('Name this specimen before saving it.');
+  return undefined;
+}
+
+function persist(patch: PatchCard): false | void {
+  const name = visibleName();
+  if (!name) return false;
+  const namedPatch = patch.name === name ? patch : { ...patch, name };
+  saved = [structuredClone(namedPatch), ...saved.filter((item) => item.id !== namedPatch.id)].slice(0, 30);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
   renderSaved();
 }
 
 function mount(patch: PatchCard): void {
   nameInput.value = patch.name;
+  setNameError();
   if (widget) widget.destroy();
   widget = mountPatchcard(widgetRoot, {
     patch,
@@ -119,8 +142,8 @@ mount(initialPatch);
 renderSaved();
 
 nameInput.addEventListener('input', () => {
-  const value = nameInput.value.trim();
-  if (value) widget.setPatch({ ...widget.getPatch(), name: value });
+  const name = visibleName();
+  if (name && widget.getPatch().name !== name) widget.setPatch({ ...widget.getPatch(), name });
 });
 
 document.querySelector('[data-play]')!.addEventListener('click', async (event) => {

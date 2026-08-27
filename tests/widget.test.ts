@@ -33,4 +33,15 @@ describe('mountPatchcard', () => {
     widget.destroy();
     expect(root.innerHTML).toBe('');
   });
+
+  it('does not report success when the host rejects a save', () => {
+    document.body.innerHTML = '<div id="root"></div>';
+    const root = document.querySelector('#root')!;
+    const widget = mountPatchcard(root, { patch: patch(), onSave: () => false });
+    root.querySelector<HTMLButtonElement>('[data-pc-action="save"]')!.click();
+    const status = root.querySelector<HTMLElement>('[data-pc-status]')!;
+    expect(status.dataset.state).toBe('error');
+    expect(status.textContent).toMatch(/needs attention/u);
+    widget.destroy();
+  });
 });

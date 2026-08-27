@@ -130,8 +130,9 @@ export function mountPatchcard(target: Element, options: WidgetOptions): Patchca
     if (!button) return;
     const action = button.dataset.pcAction;
     if (action === 'save') {
-      options.onSave?.(structuredClone(patch));
-      setStatus('Specimen saved locally.', 'success');
+      const saved = options.onSave?.(structuredClone(patch));
+      if (saved === false) setStatus('This specimen needs attention before it can be saved.', 'error');
+      else setStatus('Specimen saved locally.', 'success');
     } else if (action === 'json') {
       download(new Blob([JSON.stringify(patch, null, 2)], { type: 'application/json' }), fileName(patch.name, 'patchcard.json'));
       setStatus('JSON exported.', 'success');

@@ -12,9 +12,18 @@ page.on('pageerror', (error) => consoleErrors.push(error.message));
 try {
   await page.goto(base, { waitUntil: 'networkidle' });
   await page.locator('#patch-widget[aria-busy="false"]').waitFor();
+  await page.locator('#patch-name').fill('');
+  if (await page.locator('#patch-name').getAttribute('aria-invalid') !== 'true') {
+    throw new Error('An empty specimen name is not marked invalid.');
+  }
+  await page.getByRole('button', { name: 'Save specimen' }).click();
+  if (await page.locator('[data-name-error]').isHidden()) throw new Error('The empty specimen-name error is not visible.');
+  if (await page.locator('[data-saved-list] [data-open]').count()) throw new Error('An unnamed specimen was saved.');
+
+  await page.locator('#patch-name').fill('Cedar signal');
   await page.locator('[data-pc-param="pitch"]').fill('330');
   await page.getByRole('button', { name: 'Save specimen' }).click();
-  await page.getByRole('button', { name: /^Moss radio Field oscillator/u }).waitFor();
+  await page.getByRole('button', { name: /^Cedar signal Field oscillator/u }).waitFor();
 
   const jsonDownload = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Export JSON' }).click();
@@ -36,6 +45,10 @@ try {
 
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(base, { waitUntil: 'networkidle' });
+  const copyCodeBox = await page.getByRole('button', { name: 'Copy code' }).boundingBox();
+  if (!copyCodeBox || copyCodeBox.width < 44 || copyCodeBox.height < 44) {
+    throw new Error(`Copy code touch target is ${copyCodeBox?.width ?? 0} × ${copyCodeBox?.height ?? 0}px, not at least 44 × 44px.`);
+  }
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   if (overflow > 1) throw new Error(`Mobile layout overflows by ${overflow}px.`);
   if (consoleErrors.length) throw new Error(`Console errors: ${consoleErrors.join(' | ')}`);
