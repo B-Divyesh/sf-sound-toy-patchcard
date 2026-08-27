@@ -42,10 +42,19 @@ Results:
 - Production assets remain within the static budgets: 39.54 kB JS (14.67 kB
   gzip), 14.91 kB CSS (4.07 kB gzip), and a 120.52 kB WebP hero.
 
-## Deploy and publish
+## Deployment and publish
 
-Build `dist/site` from the final committed repair, deploy it as Standard static
-docs, then run:
+Deployed as **Standard static docs** at
+<https://sound-toy-patchcard.sociobot.in/>. The production identity regression
+passed: live `release.json` exactly matched the Git commit used for the
+deployed build, while retaining the nominated candidate and `repair-2` labels.
+The live browser/axe suite and `/opt/fleet/lib/verify-url.sh` passed with no
+console/page errors; the latter confirmed title, `lang`, one H1, main
+landmark, image alt text, and a 685 ms first navigation. Live hashed CSS has
+the immutable one-year cache policy, while `release.json` is short-lived so a
+new deployment identity is promptly observable.
+
+To independently verify a deployment, run:
 
 ```sh
 PATCHCARD_RELEASE_URL=https://sound-toy-patchcard.sociobot.in npm run test:release
