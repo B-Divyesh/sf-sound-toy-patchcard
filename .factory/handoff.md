@@ -3,7 +3,7 @@
 ## What changed
 
 - Repaired every finding from QA report `476b6f7fd54487f6e3625889d9a6a8fcfb63f88b` for candidate `54d5a2d1d46faae023ec78c2226d79119b5c8028`.
-- Added Standard Static Web Apps response rules in `site/public/staticwebapp.config.json` (and portable `_headers`): a restrictive CSP, a Permissions-Policy, `nosniff`, and the correct `application/manifest+json; charset=utf-8` manifest MIME. Build-hashed `/assets/*` now receive `Cache-Control: public, max-age=31536000, immutable`.
+- Added Standard Static Web Apps response rules in `site/public/staticwebapp.config.json` (and portable `_headers`): a restrictive CSP, a Permissions-Policy, `nosniff`, and the correct `application/manifest+json` manifest MIME. Build-hashed `/assets/*` now receive `Cache-Control: public, max-age=31536000, immutable`.
 - Moved the original generated herbarium image into the Vite asset graph. Production now emits it with a content hash alongside JS and CSS; the service-worker cache was versioned while preserving offline shell behavior.
 - Made the demo’s specimen name an accessible required field. Clearing it produces an announced, visible error and causes the host save adapter to reject the save, so the visible blank value can never silently save an older name. The widget now supports an optional `onSave` return value of `false` for host validation failures.
 - Raised the mobile **Copy code** control to a minimum 44 × 44 CSS-pixel target.
@@ -30,6 +30,8 @@ Verified on 2026-08-27:
 - `npm run build`: passed. `dist/site` contains hashed JS (39.54 KB), CSS (14.76 KB), and original WebP (120.52 KB), all within product budgets; `_headers` is copied into the deploy root.
 - `npm run test:a11y`: passed against a production Vite preview. It covers save/reject/save behavior, JSON/share/QR/WAV flows, 390px no-overflow and 44px Copy code target, console errors, and axe WCAG 2 A/AA/2.1 AA scans for home, privacy, and terms.
 - `npm pack` produced a 12.4 KB tarball containing `docs/format.md`. A fresh temporary consumer installed it and passed ESM, CommonJS, stylesheet, schema, and format-document checks.
+- Standard static deployment of `dist/site`: passed. Live `npm run test:a11y` against `https://sound-toy-patchcard.sociobot.in` also passed.
+- Live response verification: hashed JS, CSS, and WebP return `Cache-Control: public, max-age=31536000, immutable`; the manifest returns `Content-Type: application/manifest+json`; all checked responses include the configured CSP and Permissions-Policy.
 
 ## Deploy
 
@@ -42,7 +44,7 @@ curl -fsSI https://sound-toy-patchcard.sociobot.in/assets/<hashed-file>.js
 curl -fsSI https://sound-toy-patchcard.sociobot.in/manifest.webmanifest
 ```
 
-The first response must include the one-year immutable cache policy; the second must include `Content-Type: application/manifest+json; charset=utf-8`, CSP, and Permissions-Policy.
+The first response must include the one-year immutable cache policy; the second must include `Content-Type: application/manifest+json`, CSP, and Permissions-Policy. This was verified on the live deployment.
 
 ## Known gaps
 
