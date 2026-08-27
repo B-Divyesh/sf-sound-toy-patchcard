@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sound-toy-patchcard.sociobot.in/sitemap.xml

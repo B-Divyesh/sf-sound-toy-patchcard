@@ -1,0 +1,10 @@
+{
+  "name": "Patchcard",
+  "short_name": "Patchcard",
+  "description": "Preserve and re-grow browser sound settings.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f3eedc",
+  "theme_color": "#f3eedc",
+  "icons": []
+}

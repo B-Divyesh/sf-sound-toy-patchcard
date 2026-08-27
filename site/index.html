@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f3eedc">
+    <meta name="description" content="Save, share, print, and re-grow the sounds you discover in browser toys with an open patch-card format.">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <title>Patchcard — preserve a browser sound</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to the workbench</a>
+    <div class="offline-banner" data-offline hidden role="status">You’re offline. Saved cards and the workbench still work on this device.</div>
+    <header class="site-header">
+      <a class="wordmark" href="/" aria-label="Patchcard home"><span aria-hidden="true">⌁</span> Patchcard</a>
+      <nav aria-label="Primary navigation">
+        <a href="#workbench">Workbench</a>
+        <a href="#format">Format</a>
+        <a href="https://github.com/B-Divyesh/sf-sound-toy-patchcard">GitHub <span aria-hidden="true">↗</span></a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero__copy">
+          <p class="kicker">An open field note for browser sounds</p>
+          <h1 id="hero-title">Keep the sound you just found.</h1>
+          <p class="lede">Name it. Save the exact settings. Print it, scan it, and re-grow it on another device—without opening a DAW or uploading a recording.</p>
+          <div class="hero__actions">
+            <a class="button button--primary" href="#workbench">Make a patchcard</a>
+            <button class="text-button" type="button" data-example>Open an example</button>
+          </div>
+          <p class="privacy-note"><span aria-hidden="true">●</span> Local-first. Shared links contain settings, not audio.</p>
+        </div>
+        <figure class="hero__specimen">
+          <img src="/patchcard-herbarium.webp" width="1280" height="853" alt="A waveform shaped like fern veins pinned among pressed leaves on a field-guide folio" fetchpriority="high">
+          <figcaption>Specimen PC–001 · waveform study</figcaption>
+        </figure>
+      </section>
+
+      <section class="workbench" id="workbench" aria-labelledby="workbench-title">
+        <div class="section-heading">
+          <p class="kicker">Live specimen bench</p>
+          <h2 id="workbench-title">Shape it, hear it, take it home</h2>
+          <p>This tiny sound is only a stand-in for your own toy. The card format and widget are the part you embed.</p>
+        </div>
+
+        <div class="bench-layout">
+          <div class="bench-main">
+            <div class="toy-toolbar" aria-label="Demo sound controls">
+              <label for="patch-name">Specimen name</label>
+              <input id="patch-name" maxlength="120" value="Moss radio">
+              <button class="button button--listen" type="button" data-play><span aria-hidden="true">▶</span> Hear this sound</button>
+              <button class="button" type="button" data-new>Start a new card</button>
+            </div>
+            <div id="patch-widget" aria-busy="true"><p class="loading-note">Preparing the workbench…</p></div>
+            <div class="import-row">
+              <label class="button" for="patch-import">Import JSON</label>
+              <input class="visually-hidden" id="patch-import" type="file" accept="application/json,.json">
+              <p>Already have a card? Open it here. Your current patch stays put if the file is invalid.</p>
+            </div>
+            <div class="notice notice--error" data-import-error hidden role="alert"></div>
+          </div>
+
+          <aside class="cabinet" aria-labelledby="saved-title">
+            <div class="cabinet__heading">
+              <div><p class="kicker">This browser</p><h3 id="saved-title">Saved specimens</h3></div>
+              <button class="text-button" type="button" data-clear hidden>Clear all</button>
+            </div>
+            <div data-saved-list></div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="field-notes" aria-labelledby="field-title">
+        <div class="section-heading">
+          <p class="kicker">Why a field note?</p>
+          <h2 id="field-title">Settings travel better than screenshots</h2>
+        </div>
+        <ol class="steps">
+          <li><span>01</span><h3>Observe</h3><p>Give every control a stable ID and keep the value exactly as the toy knows it.</p></li>
+          <li><span>02</span><h3>Press</h3><p>Save a versioned JSON card with a small visual fingerprint. No account needed.</p></li>
+          <li><span>03</span><h3>Re-grow</h3><p>Scan or open the link. Apply the same values to the same toy on another device.</p></li>
+        </ol>
+      </section>
+
+      <section class="format-section" id="format" aria-labelledby="format-title">
+        <div class="format-copy">
+          <p class="kicker">For toy makers</p>
+          <h2 id="format-title">One small API. An open card.</h2>
+          <p>Patchcard is a zero-service TypeScript library with ESM, CommonJS, and declarations. The host owns sound generation; Patchcard owns preservation and transport.</p>
+          <ul class="checklist"><li>Versioned JSON Schema</li><li>Exact typed values</li><li>Embeddable accessible widget</li><li>Opt-in, licensed audio only</li></ul>
+          <a class="button button--primary" href="https://www.npmjs.com/package/@sociobot/patchcard">View npm package <span aria-hidden="true">↗</span></a>
+        </div>
+        <div class="code-sample" aria-label="Installation and usage example">
+          <div class="code-sample__bar"><span>field-note.ts</span><button type="button" data-copy-code>Copy code</button></div>
+          <pre><code data-code>npm install @sociobot/patchcard
+
+import { createPatch,
+  mountPatchcard } from '@sociobot/patchcard';
+
+const patch = createPatch({
+  name: 'Rain beetle',
+  toy: { name: 'Pocket drone' },
+  parameters: [
+    { id: 'pitch', label: 'Pitch',
+      value: 220, min: 80, max: 880 }
+  ]
+});</code></pre>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div><a class="wordmark" href="/">⌁ Patchcard</a><p>An open format for sounds worth finding again.</p></div>
+      <nav aria-label="Legal"><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="https://github.com/B-Divyesh/sf-sound-toy-patchcard/blob/main/LICENSE">MIT license</a></nav>
+    </footer>
+    <script type="module" src="/main.ts"></script>
+  </body>
+</html>
