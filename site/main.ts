@@ -98,15 +98,36 @@ function escapeHtml(value: string): string {
   return value.replace(/[&<>"']/gu, (match) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[match]!);
 }
 
-function persist(patch: PatchCard): void {
-  saved = [structuredClone(patch), ...saved.filter((item) => item.id !== patch.id)].slice(0, 30);
+function setNameError(message = ''): void {
+  const invalid = Boolean(message);
+  nameInput.setCustomValidity(message);
+  nameInput.setAttribute('aria-invalid', String(invalid));
+  nameError.hidden = !invalid;
+  nameError.textContent = message;
+}
+
+function visibleName(): string | undefined {
+  const name = nameInput.value.trim();
+  if (name) {
+    setNameError();
+    return name;
+  }
+  setNameError('Name this specimen before saving it.');
+  return undefined;
+}
+
+function persist(patch: PatchCard): false | void {
+  const name = visibleName();
+  if (!name) return false;
+  const namedPatch = patch.name === name ? patch : { ...patch, name };
+  saved = [structuredClone(namedPatch), ...saved.filter((item) => item.id !== namedPatch.id)].slice(0, 30);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
   renderSaved();
 }
 
 function mount(patch: PatchCard): void {
   nameInput.value = patch.name;
-  setNameValidity(true);
+  setNameError();
   if (widget) widget.destroy();
   widget = mountPatchcard(widgetRoot, {
     patch,
@@ -120,30 +141,10 @@ function mount(patch: PatchCard): void {
 mount(initialPatch);
 renderSaved();
 
-function setNameValidity(valid: boolean): boolean {
-  if (valid) nameInput.removeAttribute('aria-invalid');
-  else nameInput.setAttribute('aria-invalid', 'true');
-  nameError.hidden = valid;
-  return valid;
-}
-
-function syncName(): boolean {
-  const value = nameInput.value.trim();
-  if (!value) return setNameValidity(false);
-  setNameValidity(true);
-  if (widget.getPatch().name !== value) widget.setPatch({ ...widget.getPatch(), name: value });
-  return true;
-}
-
-nameInput.addEventListener('input', syncName);
-
-widgetRoot.addEventListener('click', (event) => {
-  if (!(event.target as Element).closest<HTMLButtonElement>('[data-pc-action="save"]')) return;
-  if (!syncName()) {
-    event.preventDefault();
-    event.stopImmediatePropagation();
-  }
-}, true);
+nameInput.addEventListener('input', () => {
+  const name = visibleName();
+  if (name && widget.getPatch().name !== name) widget.setPatch({ ...widget.getPatch(), name });
+});
 
 document.querySelector('[data-play]')!.addEventListener('click', async (event) => {
   const button = event.currentTarget as HTMLButtonElement;

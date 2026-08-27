@@ -62,7 +62,8 @@ export interface WidgetOptions {
   onChange?: (patch: PatchCard) => void;
   renderAudio?: (patch: PatchCard) => Promise<Blob> | Blob;
   shareBaseUrl?: string;
-  onSave?: (patch: PatchCard) => void;
+  /** Return false to keep the card unsaved (for example, when host validation fails). */
+  onSave?: (patch: PatchCard) => void | false;
 }
 
 export interface PatchcardWidget {
