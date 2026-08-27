@@ -75,6 +75,7 @@ npm install
 npm test
 npm run build       # library + site -> dist/, site root -> dist/site/
 npm run build:site  # documentation/demo only -> dist/site/
+npm run test:release # confirms dist/site/release.json identifies this commit
 npm pack --dry-run
 ```
 
@@ -84,8 +85,10 @@ service worker makes the installed shell available offline.
 
 ## Deploy
 
-Deploy `dist/site` as a static site with `index.html` at its root. No server,
-account, analytics, fonts, or payment integration is needed.
+Deploy `dist/site` as a static site with `index.html` at its root. The build
+also emits `release.json`, which records the source commit and repair release
+identifier for deployment verification. No server, account, analytics, fonts,
+or payment integration is needed.
 
 ## License
 

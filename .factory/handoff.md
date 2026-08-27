@@ -1,83 +1,62 @@
-# Patchcard QA handoff — **FAIL**
-
-## Latest independent verification (2026-08-27)
-
-**FAIL for candidate `8b818d73a9267e3d08c08292f29d9092f471d955` at
-<https://sound-toy-patchcard.sociobot.in/>.** The full report is
-[`verification-2.md`](verification-2.md). Local install, tests, production
-build, package-consumer proof, browser flows, live axe smoke, PWA offline
-reload, bundle budgets, privacy/network review, and live response policies all
-passed. Acceptance is blocked by two medium defects:
-
-- The live deployment is later `origin/main` commit
-  `90431a84b395f543c02ab5f3c9f615b906f8f362`, not the requested candidate;
-  its live CSS and response-policy configuration differ from the candidate.
-- The home-page skip link scrolls to `#main` but does not move keyboard focus
-  to the main landmark.
-
-Deploy an artifact identifiable as the approved candidate (or nominate the
-deployed commit), then repair and keyboard-retest focus transfer before
-release. The remaining sections are the earlier repair handoff, retained as
-historical context rather than a superseding PASS.
+# Patchcard repair-2 handoff
 
 ## Delivered
 
-QA report `476b6f7fd54487f6e3625889d9a6a8fcfb63f88b` for candidate
-`54d5a2d1d46faae023ec78c2226d79119b5c8028` is repaired, committed, and
-deployed as Standard static docs at <https://sound-toy-patchcard.sociobot.in/>.
+This repair closes both verifier-2 findings for candidate
+`8b818d73a9267e3d08c08292f29d9092f471d955`.
 
-- Vite now emits the JS, CSS, and original herbarium WebP under hashed
-  `/assets/` paths. Live assets use
-  `Cache-Control: public, max-age=31536000, immutable`.
-- `staticwebapp.config.json` and portable `_headers` declare CSP,
-  Permissions-Policy, `nosniff`, referrer policy, and correct manifest MIME.
-- An empty specimen name gets an announced, visible error; the host rejects its
-  save through the widget's typed optional `onSave: () => false` contract. No
-  stale hidden name is persisted, and the other card/audio actions continue to
-  operate normally.
-- Copy code is at least 44 × 44 CSS px on mobile.
-- `docs/format.md` is included in the npm tarball, repairing the README link.
-- Added exact regression coverage for save rejection, browser name/touch-target
-  behavior, package documentation, immutable caching, headers, and manifest
-  MIME.
+- Every site skip link now moves keyboard focus to its `<main>` landmark,
+  including the Privacy and Terms pages. The targets are programmatically
+  focusable, get a visible focus outline, and respect reduced-motion while
+  scrolling.
+- Static builds emit `dist/site/release.json`. It names `repair-2`, the
+  nominated base candidate, and the exact Git commit used to create the
+  artifact. `npm run test:release` checks that identity locally; setting
+  `PATCHCARD_RELEASE_URL=https://sound-toy-patchcard.sociobot.in` checks the
+  deployed artifact against the current commit.
+- Added exact source and browser regressions for focus transfer and an exact
+  build/deployment identity regression. The deployment identity is no longer
+  inferred from coincidentally matching assets.
 
 ## Verification
 
-Performed from a clean dependency install with Node 22:
+Performed after a clean `npm ci` with Node 22 / npm 10:
 
 ```sh
-npm ci
 npm run check
 npm exec vite preview -- --config site/vite.config.ts --host 127.0.0.1 --port 4173
 npm run test:a11y
 npm pack --pack-destination "$(mktemp -d)"
 ```
 
-The clean checks pass: TypeScript, 13 Vitest tests, production build, package
-dry-run, and the browser/axe suite for `/`, `/privacy/`, and `/terms/`. A clean
-consumer installed the tarball and passed ESM create/encode/decode and CommonJS
-update checks, and confirmed the stylesheet, schema, and format guide exist.
+Results:
 
-The production bundle is about 39.5 kB JS and 14.8 kB CSS; the generated hero
-is 120.52 kB. `/opt/fleet/lib/verify-url.sh` passed on live with no console or
-page errors, a title, language, one H1, main landmark, and complete image alt
-text. The live browser suite passed, including mobile overflow and QA
-regressions. Live Lighthouse mobile reported Performance **100** and
-Accessibility **100**.
+- `npm run check` passed: typecheck; 15 Vitest tests; production library/site
+  build; release-identity check; and `npm pack --dry-run`.
+- Browser QA passed at desktop and 390 × 844: the first Tab focuses each skip
+  link and Enter makes its page's `<main>` the active element; core save,
+  share, JSON/WAV export, mobile target, zero-overflow, console, and axe WCAG
+  2 A/AA/2.1 AA checks passed on `/`, `/privacy/`, and `/terms/`.
+- A clean tarball consumer passed both ESM create/encode/decode and CommonJS
+  update paths; installed stylesheet, schema, and format guide were present.
+- Production assets remain within the static budgets: 39.54 kB JS (14.67 kB
+  gzip), 14.91 kB CSS (4.07 kB gzip), and a 120.52 kB WebP hero.
 
-Live `HEAD` checks confirmed the immutable policy on hashed JS/CSS/WebP, CSP
-and Permissions-Policy, and manifest `Content-Type: application/manifest+json`.
+## Deploy and publish
 
-## Run and publish
+Build `dist/site` from the final committed repair, deploy it as Standard static
+docs, then run:
 
-Use `npm run dev` for the documentation/demo, `npm test` for library and
-release-contract tests, and `npm run build` to create `dist/` and `dist/site/`.
-The factory owns registry publishing; the ready-to-publish command is
-`npm pack`.
+```sh
+PATCHCARD_RELEASE_URL=https://sound-toy-patchcard.sociobot.in npm run test:release
+PATCHCARD_TEST_URL=https://sound-toy-patchcard.sociobot.in npm run test:a11y
+```
+
+The package is ready to publish but was not published (the factory owns
+registry credentials): `npm pack`.
 
 ## Known gaps
 
-Sound recreation continues to depend on host toys retaining stable parameter
-IDs and synthesis semantics, as documented by the v1 format. No hosted audio,
-analytics, or third-party runtime services are used. The earlier independent
-verification remains in `.factory/verification.md` as historical evidence.
+Sound recreation still depends on a host toy retaining stable parameter IDs
+and synthesis semantics. The product has no hosted audio, analytics,
+third-party runtime services, account, or payment flow.

@@ -38,6 +38,13 @@ try {
 
   for (const path of ['/', '/privacy/', '/terms/']) {
     await page.goto(`${base}${path}`, { waitUntil: 'networkidle' });
+    await page.keyboard.press('Tab');
+    const skipLink = page.locator('a[data-skip-link]');
+    if (!(await skipLink.evaluate((link) => document.activeElement === link))) {
+      throw new Error(`${path} does not focus its skip link first with the keyboard.`);
+    }
+    await page.keyboard.press('Enter');
+    await page.waitForFunction(() => document.activeElement === document.querySelector('main'));
     const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze();
     const serious = results.violations.filter((item) => item.impact === 'serious' || item.impact === 'critical');
     if (serious.length) throw new Error(`${path} has accessibility violations: ${serious.map((item) => item.id).join(', ')}`);

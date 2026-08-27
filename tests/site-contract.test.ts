@@ -21,4 +21,22 @@ describe('release contracts', () => {
     expect(routes).toContainEqual({ route: '/assets/*', headers: { 'Cache-Control': 'public, max-age=31536000, immutable' } });
     expect((config.mimeTypes as Record<string, string>)['.webmanifest']).toBe('application/manifest+json');
   });
+
+  it('marks every skip destination as focusable and loads the focus-transfer helper', () => {
+    for (const path of ['site/index.html', 'site/privacy/index.html', 'site/terms/index.html']) {
+      const html = readFileSync(resolve(root, path), 'utf8');
+      expect(html).toMatch(/data-skip-link/u);
+      expect(html).toMatch(/<main id="(?:main|content)" tabindex="-1">/u);
+      expect(html).toContain('/skip-link.js');
+    }
+    const helper = readFileSync(resolve(root, 'site/public/skip-link.js'), 'utf8');
+    expect(helper).toContain('target.focus({ preventScroll: true })');
+  });
+
+  it('builds an exact repair-2 deployment identity', () => {
+    const config = readFileSync(resolve(root, 'site/vite.config.ts'), 'utf8');
+    expect(config).toContain("release: 'repair-2'");
+    expect(config).toContain("baseCandidate: '8b818d73a9267e3d08c08292f29d9092f471d955'");
+    expect(config).toContain('release.json');
+  });
 });

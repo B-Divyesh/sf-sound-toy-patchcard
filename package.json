@@ -38,9 +38,10 @@
     "build": "npm run clean && npm run build:lib && npm run build:site",
     "test": "vitest run",
     "test:a11y": "node scripts/verify-site.mjs",
+    "test:release": "node scripts/verify-release-identity.mjs",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
-    "check": "npm run typecheck && npm test && npm run build && npm pack --dry-run"
+    "check": "npm run typecheck && npm test && npm run build && npm run test:release && npm pack --dry-run"
   },
   "engines": {
     "node": ">=20"
