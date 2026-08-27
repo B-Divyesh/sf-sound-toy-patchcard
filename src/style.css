@@ -1,0 +1,71 @@
+.patchcard {
+  --patchcard-paper: #fcfaf2;
+  --patchcard-surface: #e5e6cf;
+  --patchcard-ink: #173c32;
+  --patchcard-muted: #5a4938;
+  --patchcard-accent: #2f6b50;
+  --patchcard-focus: #d99a2b;
+  --patchcard-danger: #a34436;
+  color: var(--patchcard-ink);
+  font: 16px/1.5 "Arial Narrow", Aptos, "Segoe UI", sans-serif;
+}
+.patchcard *, .patchcard *::before, .patchcard *::after { box-sizing: border-box; }
+.patchcard [hidden] { display: none !important; }
+.patchcard__sheet {
+  position: relative;
+  padding: clamp(20px, 4vw, 40px);
+  background: var(--patchcard-paper);
+  border: 1px solid color-mix(in srgb, var(--patchcard-ink) 70%, transparent);
+  box-shadow: 8px 8px 0 color-mix(in srgb, var(--patchcard-accent) 16%, transparent);
+  clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%);
+}
+.patchcard__sheet::after { content: ""; position: absolute; inset: 8px; border: 1px solid color-mix(in srgb, var(--patchcard-ink) 16%, transparent); pointer-events: none; }
+.patchcard__header { border-bottom: 2px solid var(--patchcard-ink); padding-bottom: 16px; }
+.patchcard__eyebrow { color: var(--patchcard-muted); font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+.patchcard h2 { margin: 4px 0; font: 700 clamp(28px, 5vw, 42px)/1.1 Georgia, Cambria, serif; }
+.patchcard p { margin: 4px 0; }
+.patchcard__waveform { margin: 24px 0; }
+.patchcard__waveform svg { display: block; width: 100%; height: auto; color: var(--patchcard-accent); }
+.patchcard__waveform line { stroke: currentColor; stroke-width: 1; opacity: .3; }
+.patchcard__waveform path { fill: none; stroke: currentColor; stroke-width: 4; vector-effect: non-scaling-stroke; }
+.patchcard__waveform figcaption { margin-top: 4px; color: var(--patchcard-muted); font-size: 14px; }
+.patchcard__parameters { display: grid; gap: 16px; }
+.patchcard__field { display: grid; grid-template-columns: minmax(96px, 1fr) 2fr; align-items: center; gap: 16px; font-weight: 700; }
+.patchcard__field select, .patchcard__field input[type="text"] { min-height: 44px; width: 100%; border: 1px solid var(--patchcard-ink); background: transparent; color: inherit; padding: 8px 12px; font: inherit; }
+.patchcard__range { display: grid; grid-template-columns: 1fr 72px; align-items: center; gap: 12px; }
+.patchcard__range input { width: 100%; accent-color: var(--patchcard-accent); min-height: 44px; }
+.patchcard__range output { color: var(--patchcard-muted); font-variant-numeric: tabular-nums; text-align: right; }
+.patchcard__toggle { display: flex; align-items: center; justify-content: space-between; min-height: 44px; font-weight: 700; }
+.patchcard__toggle input { position: absolute; opacity: 0; }
+.patchcard__switch { width: 52px; height: 28px; border: 2px solid var(--patchcard-ink); border-radius: 20px; position: relative; }
+.patchcard__switch::after { content: ""; position: absolute; top: 4px; left: 4px; width: 16px; height: 16px; border-radius: 50%; background: var(--patchcard-ink); transition: transform 180ms ease; }
+.patchcard__toggle input:checked + .patchcard__switch { background: var(--patchcard-accent); }
+.patchcard__toggle input:checked + .patchcard__switch::after { transform: translateX(24px); background: white; }
+.patchcard__toggle input:focus-visible + .patchcard__switch { outline: 3px solid var(--patchcard-focus); outline-offset: 3px; }
+.patchcard__status { min-height: 24px; margin-top: 20px; color: var(--patchcard-muted); }
+.patchcard__status[data-state="error"] { color: var(--patchcard-danger); font-weight: 700; }
+.patchcard__status[data-state="success"] { color: var(--patchcard-accent); font-weight: 700; }
+.patchcard__actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.patchcard button { min-height: 44px; border: 1px solid var(--patchcard-ink); border-radius: 2px; background: transparent; color: inherit; padding: 10px 14px; font: 700 15px/1.2 inherit; cursor: pointer; transition: transform 160ms ease, background-color 160ms ease; }
+.patchcard button:hover { background: var(--patchcard-surface); }
+.patchcard button:active { transform: translateY(2px); }
+.patchcard button:disabled { cursor: wait; opacity: .6; }
+.patchcard button.patchcard__primary { background: var(--patchcard-accent); color: white; border-color: var(--patchcard-accent); }
+.patchcard button:focus-visible, .patchcard input:focus-visible, .patchcard select:focus-visible { outline: 3px solid var(--patchcard-focus); outline-offset: 3px; }
+.patchcard__travel { display: grid; grid-template-columns: 112px 1fr; gap: 16px; align-items: center; margin-top: 20px; padding: 16px; background: var(--patchcard-surface); border-top: 1px dashed var(--patchcard-ink); }
+.patchcard__travel svg { width: 104px; height: 104px; display: block; }
+@media (max-width: 520px) {
+  .patchcard__field { grid-template-columns: 1fr; gap: 4px; }
+  .patchcard__travel { grid-template-columns: 88px 1fr; }
+  .patchcard__travel svg { width: 80px; height: 80px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .patchcard *, .patchcard *::before, .patchcard *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+}
+@media print {
+  body * { visibility: hidden; }
+  .patchcard, .patchcard * { visibility: visible; }
+  .patchcard { position: absolute; inset: 0; }
+  .patchcard__actions, .patchcard__status { display: none !important; }
+  .patchcard__sheet { box-shadow: none; }
+}
