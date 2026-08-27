@@ -1,117 +1,64 @@
-# Patchcard verifier handoff — FAIL
+# Patchcard QA repair handoff
 
-Independent verification of candidate
-`54d5a2d1d46faae023ec78c2226d79119b5c8028` is **FAIL**.
+## Delivered
 
-The package builds, tests, packs, installs into a clean consumer, and works
-through the core save / export / share / QR / print / local WAV / recovery
-flow. The public deployment is byte-for-byte the same as this candidate.
+QA report `476b6f7fd54487f6e3625889d9a6a8fcfb63f88b` is repaired in commit
+`5c0313b` and deployed as a Standard Azure Static Web App at
+<https://sound-toy-patchcard.sociobot.in/>.
 
-Release is blocked by **DEPLOY-CACHE-01**: live hashed JS, CSS, and WebP assets
-are served with `Cache-Control: public, must-revalidate, max-age=30`, with no
-`immutable`. The factory static-product contract requires long-lived immutable
-caching for hashed assets. This needs a deployment/CDN header configuration
-change, followed by a live verification rerun.
+- Hashed JS, CSS, and hero WebP now deploy under `/assets/` with
+  `Cache-Control: public, max-age=31536000, immutable`.
+- `site/public/staticwebapp.config.json` supplies a restrictive CSP,
+  Permissions-Policy, `nosniff`, referrer policy, and
+  `.webmanifest` → `application/manifest+json` MIME mapping.
+- Clearing Specimen name shows a described, live validation error and blocks
+  Save, so no stale invisible name can be persisted. Valid edits continue to
+  update the card, JSON, share, QR, print, and local WAV flows.
+- Mobile Copy code is now a minimum 44 × 44 px target.
+- The README's `docs/format.md` link is valid in the npm tarball.
+- Regressions cover package documentation and static-host policy declarations
+  in Vitest, and the browser smoke test covers empty-name rejection/no-save and
+  the mobile Copy code target.
 
-Also fix before the next candidate if possible:
+## Verification
 
-- Emptying the specimen name leaves the visual input empty while saving the old
-  patch name without an error.
-- The mobile Copy code target is 38 px high rather than 44 px.
-- Include `docs/format.md` in the npm tarball or remove/replace the README's
-  relative link to it.
-- Add CSP and Permissions-Policy response headers; serve the web manifest with
-  an appropriate manifest MIME type.
-
-How to reproduce the passed local checks:
+Performed from a clean dependency install with Node 22:
 
 ```sh
 npm ci
 npm run check
 npm exec vite preview -- --config site/vite.config.ts --host 127.0.0.1 --port 4173
 npm run test:a11y
-npm pack
+npm pack --pack-destination "$(mktemp -d)"
 ```
 
-The complete command results, functional/browser coverage, privacy/network
-observations, live artifact matching evidence, and all defects by severity are
-in `.factory/verification.md`. No product source code was changed by the
-verifier.
+`npm run check` passed: TypeScript, 9 Vitest tests, production build, and npm
+dry-run pack. The production bundle is 39.48 kB JS and 14.82 kB CSS (both well
+within budget); the original generated WebP hero is 120.52 kB. A clean npm
+consumer installed the packed tarball and passed ESM create/encode/decode and
+CommonJS update checks; it also confirmed stylesheet, schema, and
+`docs/format.md` are installed.
 
-## Original builder record (superseded by the independent result above)
+Local and live Playwright/axe scans passed for `/`, `/privacy/`, and `/terms/`
+with no serious or critical WCAG 2/2.1 AA issues, no console/page errors, and
+no mobile horizontal overflow. `/opt/fleet/lib/verify-url.sh` confirmed live
+title, `lang`, one H1, main landmark, complete image alt text, and no browser
+errors. Live mobile Lighthouse reported Performance **99** and Accessibility
+**100**.
 
-# Patchcard v0.1.0 handoff
-
-## What shipped
-
-- A ready-to-publish `@sociobot/patchcard` TypeScript package with ESM,
-  CommonJS, declarations, widget CSS, MIT license, changelog, and v1 JSON
-  Schema.
-- Tiny public API: create/validate/update a patch, encode/decode a URL-safe
-  card, build a private-by-default share URL, make a waveform, and mount the
-  accessible widget.
-- The widget renders number/string/boolean/option controls, a waveform sketch,
-  JSON download, QR/share link, printable card, saved-state callbacks, and an
-  optional host-provided local WAV renderer. Audio is stripped from shares
-  unless callers explicitly pass `includeAudio: true`; attached audio requires
-  creator, source, and license metadata.
-- A finished documentation/demo site in `dist/site`: users can shape and hear a
-  small local oscillator, name and save up to 30 cards in `localStorage`, reopen
-  or delete them, import/export JSON, render a WAV, print, share by link/QR, and
-  open valid cards from `?patch=` URLs. Invalid links/files preserve the current
-  card and provide recovery text.
-- Purpose-built botanical field-guide design, responsive 390 px layout,
-  keyboard/focus treatment, reduced-motion treatment, offline status and
-  service-worker shell, empty/loading/error states, and `/privacy/` and
-  `/terms/` pages.
-- Original generated hero at `site/public/patchcard-herbarium.webp` (120 KB).
-  It was made with `/opt/fleet/lib/gen-image.sh` using the final prompt and
-  provenance recorded in `.factory/design.md`, then converted locally to WebP.
+Live `HEAD` checks confirmed the immutable cache policy on the deployed hashed
+JS/CSS/WebP, CSP and Permissions-Policy on responses, and manifest content
+type `application/manifest+json`.
 
 ## Run and publish
 
-```sh
-npm ci
-npm test
-npm run build
-npm run dev
-```
+Use `npm run dev` for the documentation/demo, `npm test` for library and
+release-contract tests, and `npm run build` to create `dist/` and `dist/site/`.
+The factory owns registry publishing; the ready-to-publish package command is
+`npm pack`.
 
-The exact production build command is `npm run build`. It creates package files
-in `dist/` and the static deploy root at `dist/site/` with
-`dist/site/index.html`. Deploy `dist/site`. The factory can publish the package
-with `npm pack` / `npm publish`; no registry action was taken by this worker.
+## Known gaps
 
-To rerun the browser checks, serve the build on port 4173 with
-`npm exec vite preview -- --config site/vite.config.ts --host 127.0.0.1 --port 4173`,
-then run `npm run test:a11y`.
-
-## Verification (2026-08-27)
-
-- `npm run typecheck`: pass.
-- `npm test`: 2 files, 7 tests passed. Coverage includes the README round trip,
-  exact typed values, audio privacy, version/error handling, immutable updates,
-  duplicate IDs, widget input, save, and teardown.
-- `npm run build`: pass. Site output is 39.12 KB JS / 14.62 KB CSS uncompressed;
-  generated hero is 120.5 KB. All are within the supplied budgets.
-- `npm pack --dry-run`: pass; package is 11.8 KB compressed / 41.3 KB unpacked.
-- `npm audit --audit-level=low`: 0 vulnerabilities.
-- Factory `verify-url.sh`: pass on `/`, `/privacy/`, and `/terms/`; no console or
-  page errors, one H1, title/lang/main present, all images have alt text, and no
-  unlabeled buttons.
-- Playwright functional smoke: save/reopen listing, JSON download, QR reveal,
-  WAV download, and 390 px horizontal overflow all pass.
-- Axe WCAG 2 A/AA/2.1 AA: 0 serious or critical issues on all three pages.
-- Lighthouse mobile: Performance 100, Accessibility 100, Best Practices 100,
-  SEO 100; FCP 1.1 s, LCP 1.8 s, Total Blocking Time 0 ms, CLS 0.
-
-## Known gaps and next steps
-
-- Patchcard preserves parameter state exactly; identical sound still depends on
-  the host toy keeping stable parameter IDs and compatible synthesis semantics.
-  Hosts should record `toy.version` and add a migration when those semantics
-  change.
-- The service worker is intentionally a small cache-first shell. A future
-  release could add an in-product update notice when a new shell is waiting.
-- Publishing, deployment, DNS, and registry credentials remain factory work.
-  After deployment, repeat Lighthouse against the public HTTPS URL.
+None. The prior independent verification record is retained in
+`.factory/verification.md` as historical evidence and is superseded by this
+repair handoff.

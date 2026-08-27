@@ -66,7 +66,7 @@ reveal are immediate and smooth scrolling is disabled.
 
 ## Asset plan and provenance
 
-One original raster hero, `site/public/patchcard-herbarium.webp`, anchors the
+One original raster hero, `site/assets/patchcard-herbarium.webp`, anchors the
 metaphor: a top-down, tactile herbarium arrangement where a waveform specimen
 is catalogued among pressed leaves. It has no text, logo, or UI screenshot, so
 all functional copy remains real HTML. Source generated on 2026-08-27 with the
