@@ -4,7 +4,8 @@
 
 PASS candidate deployed at <https://sound-toy-patchcard.sociobot.in/>.
 
-- Deployed release/source SHA: `374ded4b810a5fa53dd420c546bbf25ef76dd2ed`
+- Deployed implementation SHA: `374ded4b810a5fa53dd420c546bbf25ef76dd2ed`
+- Deployed release/documentation SHA: `e965ef9287e8ec60e87489426c311499700ee16b`
 - Last commit that changed shipped page bytes: `03f4d55`
 - Repair base: `d0e97e0da1009118789040c9b982c90f1030f47b`
 - Release label: `repair-3`
@@ -54,7 +55,9 @@ all deployed product files identify or match the deployed source SHA above.
 
 ## Verification
 
-From a fresh clone of `374ded4` under Node 22 and npm 10:
+The repair was built under Node 22 and npm 10. Verification 4 then used a
+fresh clean checkout of `e965ef9`; its only difference from `374ded4` is
+this handoff document, so the implementation remains `374ded4`.
 
 ```sh
 npm ci
@@ -82,7 +85,8 @@ Against the final HTTPS deployment:
 - `PATCHCARD_TEST_URL=... npm run test:browser`: 22/22 pass, including axe,
   keyboard, phone targets, offline reload, demo isolation, exports, share
   reopen, routes, and the clean package consumer.
-- `PATCHCARD_RELEASE_URL=... npm run test:release`: pass for `374ded4`.
+- `PATCHCARD_RELEASE_URL=... npm run test:release`: pass for `e965ef9`;
+  this is the live release/documentation identity.
 - Factory URL smoke check: 776 ms navigation, no console errors, one H1, main
   landmark, no missing alt text, and no unlabeled buttons.
 - Fresh desktop and 390 × 844 phone contexts show the complete required first
@@ -113,7 +117,12 @@ Recreating a card still requires the receiving sound toy to preserve compatible
 parameter IDs and synthesis behavior. Patchcard intentionally has no hosted
 audio, accounts, cloud sync, or synthesizer.
 
-The work order referenced `/work/.evidence/qa-result.json`, but that file was
-not present in this container. All repository reviews and verification reports
-were read, and fresh clean-checkout and live checks above replace that missing
-artifact with current evidence.
+## Verification 4
+
+Independent QA on 2026-09-05 is **PASS** with zero findings and zero untested
+claims. The fresh clone passed `npm run check`, all 15 individually invoked
+claim commands, the 22-test browser suite locally and live, the 10-test a11y
+suite, clean package installation, response/header checks, and byte-for-byte
+live-build comparisons. See `.factory/verification-4.md`. Current required
+evidence is copied to `/work/.evidence/qa-report.md` and
+`/work/.evidence/qa-result.json`.
