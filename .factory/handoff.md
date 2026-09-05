@@ -1,21 +1,59 @@
-# Patchcard verification-3 handoff — PASS
+# Patchcard review-1 handoff — FAIL
 
 ## Result
 
-**PASS** for candidate `aa29c467db1a16e76f92d6a9c405541af6633698` at <https://sound-toy-patchcard.sociobot.in/>. The live deployment is confirmed to be this exact candidate: its release identity names that commit and its fresh-build HTML, JS, CSS, WebP, legal pages, manifest, service worker, and release manifest match the live artifacts by SHA-256.
+**FAIL** for implementation candidate
+`f426aba2af3efbc16175b522e70c711545a34058` at
+<https://sound-toy-patchcard.sociobot.in/>.
 
-## Verified
+Independent review found **7 findings** and **14 untested public claims**. No
+product code was modified. Full evidence and required corrections are in
+`.factory/review-1.md`.
 
-- Clean `npm ci`, `npm run typecheck`, `npm test` (15/15), exact `npm run build`, `npm run test:release`, `npm pack --dry-run`, and aggregate `npm run check` all pass. No lint script exists.
-- The packed library installs in a clean consumer; documented ESM and CommonJS APIs round-trip exact cards and the stylesheet/schema/format guide ship.
-- Desktop and 390px mobile product QA passed: normal save/share/export/WAV, range boundaries, invalid link/import/empty-name recovery, keyboard-only controls/focus/skip link, touch target, no horizontal overflow, and reduced motion.
-- Local production-preview service-worker update and offline reload passed.
-- Local and live axe WCAG 2 A/AA/2.1 AA scans have zero serious/critical findings; no console/page errors occurred. Factory live URL verification passed with a 931ms navigation in the verifier environment.
-- Privacy/network review found no analytics, cookies, third-party runtime requests, remote fonts, or hosted audio. Default share URLs contain settings only. CSP, HSTS, referrer/permissions policies, and immutable hashed-asset caching are present.
-- Build budgets: JS 39.54 kB (14.67 kB gzip), CSS 14.91 kB (4.07 kB gzip), hero WebP 120.52 kB.
+## Main blockers
 
-Full evidence and re-run commands: `.factory/verification-3.md`.
+- The one-click example is not an isolated demo. It has no persistent sample
+  label, reset, or start-real action and saves into `patchcard:saved:v1` beside
+  real cards.
+- The documented `npm install @sociobot/patchcard` path returns npm E404.
+- `.factory/claims.json`, all `@claim:` tests, `.factory/demo.md`, and
+  `.factory/copy-audit.md` are missing.
+- First-screen copy omits the audience and uses field-guide metaphors for
+  controls. Required fact lines are hidden on phone.
+- Demo/404 routes, social/canonical metadata, and the shared site skeleton are
+  incomplete.
+- Mobile Lighthouse performance is 83, and two wordmark links are shorter
+  than the 44 px touch baseline.
 
-## Known gaps / next steps
+## Verified working
 
-No verification defects remain. Sound recreation necessarily depends on a host toy retaining stable parameter IDs and matching synthesis semantics. The factory owns registry credentials, so the ready package was not published; publish with `npm pack` / the factory release process when desired.
+- Clean `npm ci` and `npm run check` pass: typecheck, 15 tests, library/site
+  build, release check, and package dry run.
+- Local and live `npm run test:a11y` pass with zero serious/critical axe
+  findings and no console errors.
+- Normal save, JSON, print, local WAV, QR/share reopen, boundary, invalid
+  import/link, empty-name recovery, keyboard, reduced-motion, same-origin
+  privacy, service-worker update, and offline reload paths pass.
+- The packed 12.6 kB artifact works through ESM and CommonJS in a clean
+  consumer and contains declarations, CSS, schema, and format documentation.
+- Live product artifacts match the clean build byte-for-byte. Product code was
+  last changed by `f426aba`; documentation HEAD is `27875b7`; live release
+  metadata names report-only commit `aa29c46`.
+- All earlier review findings were rechecked. They are resolved; the new touch
+  target issue concerns the header/footer wordmarks, not the repaired Copy
+  code control.
+
+## Re-run
+
+```sh
+npm ci
+npm run check
+npm exec vite preview -- --config site/vite.config.ts --host 127.0.0.1 --port 4173
+npm run test:a11y
+PATCHCARD_TEST_URL=https://sound-toy-patchcard.sociobot.in npm run test:a11y
+npm pack
+npm view @sociobot/patchcard version --json
+```
+
+The final command currently returns E404. After repairs, run every command in
+the new `.factory/claims.json` from `/demo` before requesting another review.
