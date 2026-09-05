@@ -126,3 +126,20 @@ suite, clean package installation, response/header checks, and byte-for-byte
 live-build comparisons. See `.factory/verification-4.md`. Current required
 evidence is copied to `/work/.evidence/qa-report.md` and
 `/work/.evidence/qa-result.json`.
+
+## Review 2
+
+Fresh strict review on 2026-09-05 is **PASS — zero findings and zero untested
+claims**. The reviewed implementation remains
+`374ded4b810a5fa53dd420c546bbf25ef76dd2ed`; the live documentation/release SHA
+is `e965ef9287e8ec60e87489426c311499700ee16b`. The review baseline
+`d9e23ca73bb1c46625979f666bc56f66465f689f` changes reports only.
+
+The review used a fresh `d9e23ca` clone, ran every declared claim command
+separately, `npm run check`, local and live browser suites (22/22), local and
+live a11y suites (10/10), and a clean npm consumer. New live desktop and phone
+contexts confirmed the first screen, populated isolated demo, reset, and
+real-data isolation. All 21 deployed public product files match the fresh
+build; only `release.json` differs as expected for the live documentation SHA.
+See `.factory/review-2.md`. Evidence and the machine result are at
+`/work/.evidence/qa-report.md` and `/work/.evidence/qa-result.json`.
