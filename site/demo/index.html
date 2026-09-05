@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f3eedc">
+    <meta name="description" content="Try Patchcard with a ready-made sound card in an isolated browser demo.">
+    <link rel="canonical" href="https://sound-toy-patchcard.sociobot.in/demo/">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Demo — Patchcard">
+    <meta property="og:description" content="Try a ready-made sound card without changing your real saved cards.">
+    <meta property="og:url" content="https://sound-toy-patchcard.sociobot.in/demo/">
+    <meta property="og:image" content="https://sound-toy-patchcard.sociobot.in/patchcard-share.webp">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Demo — Patchcard">
+    <meta name="twitter:description" content="Try a ready-made sound card without changing your real saved cards.">
+    <meta name="twitter:image" content="https://sound-toy-patchcard.sociobot.in/patchcard-share.webp">
+    <title>Demo — Patchcard</title>
+  </head>
+  <body data-demo-mode>
+    <a class="skip-link" data-skip-link href="#main">Skip to the sample card</a>
+    <div class="offline-banner" data-offline hidden role="status">You are offline. The sample card still works.</div>
+    <aside class="demo-banner" aria-label="Demo controls">
+      <strong>Demo — sample data, nothing is saved</strong>
+      <span data-demo-status role="status" aria-live="polite"></span>
+      <div><button type="button" data-reset-demo>Reset demo</button><a href="/" data-start-real>Start for real</a></div>
+    </aside>
+    <header class="site-header">
+      <a class="wordmark" href="/" aria-label="Patchcard home"><span aria-hidden="true">⌁</span> Patchcard</a>
+      <nav aria-label="Primary navigation">
+        <a aria-current="page" href="/demo/">Demo</a>
+        <a href="/#format">Install</a>
+        <a href="/privacy/">Privacy</a>
+      </nav>
+    </header>
+
+    <main id="main" tabindex="-1">
+      <section class="demo-intro" aria-labelledby="demo-title">
+        <p class="kicker">Ready-made sound card</p>
+        <h1 id="demo-title">Try a sample sound card</h1>
+        <p>Change the controls, save the card, and reopen its exact settings.</p>
+      </section>
+      <section class="workbench workbench--demo" aria-labelledby="workbench-title">
+        <h2 class="visually-hidden" id="workbench-title">Sample card controls</h2>
+        <div class="bench-layout">
+          <div class="bench-main">
+            <div class="toy-toolbar" aria-label="Sample sound controls">
+              <label for="patch-name">Card name</label>
+              <div class="toy-name-field">
+                <input id="patch-name" maxlength="120" value="Saffron echo" required aria-required="true" aria-describedby="patch-name-error">
+                <p class="field-error" id="patch-name-error" data-name-error role="alert" hidden></p>
+              </div>
+              <button class="button button--listen" type="button" data-play><span aria-hidden="true">▶</span> Play sound</button>
+              <button class="button" type="button" data-new>Start a new card</button>
+            </div>
+            <div id="patch-widget" aria-busy="true"><p class="loading-note">Loading the sample card…</p></div>
+            <div class="import-row">
+              <label class="button" for="patch-import">Import JSON</label>
+              <input class="visually-hidden" id="patch-import" type="file" accept="application/json,.json">
+              <p>Open an existing card. An invalid file will not replace this card.</p>
+            </div>
+            <div class="notice notice--error" data-import-error hidden role="alert"></div>
+          </div>
+          <aside class="cabinet" aria-labelledby="saved-title">
+            <div class="cabinet__heading">
+              <div><p class="kicker">Isolated sample storage</p><h3 id="saved-title">Demo cards</h3></div>
+              <button class="text-button" type="button" data-clear hidden>Clear demo cards</button>
+            </div>
+            <div data-saved-list></div>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div><a class="wordmark" href="/">⌁ Patchcard</a><p>Save and reopen browser sound settings.</p><p class="build-id">v0.1.0 · repair 3 · Built by Param Factory</p></div>
+      <nav aria-label="Footer navigation"><a href="/demo/">Demo</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="https://github.com/B-Divyesh/sf-sound-toy-patchcard">Source code <span class="visually-hidden">on an external site</span><span aria-hidden="true">↗</span></a></nav>
+    </footer>
+    <script defer src="/skip-link.js"></script>
+    <script type="module" src="/main.ts"></script>
+  </body>
+</html>

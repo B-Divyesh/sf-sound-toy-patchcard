@@ -1,0 +1,107 @@
+[
+  {
+    "id": "installable-package",
+    "claim": "The package download installs and runs in a clean npm project.",
+    "where": "landing install section, README",
+    "test": "npm run test:claims -- --grep @claim:installable-package",
+    "sandbox": "download the built tarball from the site, install it in a new temporary project, and run create/encode/decode"
+  },
+  {
+    "id": "exact-settings",
+    "claim": "Card encoding and decoding preserves exact typed settings.",
+    "where": "landing how-it-works section, README",
+    "test": "npm test -- --testNamePattern @claim:exact-settings",
+    "sandbox": "create the documented card and compare the complete decoded object and value types"
+  },
+  {
+    "id": "json-export",
+    "claim": "The demo exports the current card as JSON.",
+    "where": "card action, landing, README",
+    "test": "npm run test:claims -- --grep @claim:json-export",
+    "sandbox": "demo card with changed name and pitch; inspect the downloaded filename and JSON values"
+  },
+  {
+    "id": "print-card",
+    "claim": "The demo sends the current card to browser print.",
+    "where": "card action, landing, README",
+    "test": "npm run test:claims -- --grep @claim:print-card",
+    "sandbox": "demo data with a browser print spy; assert the action calls the print path"
+  },
+  {
+    "id": "share-reopen",
+    "claim": "A QR settings link reopens exact values in a fresh browser.",
+    "where": "landing how-it-works section, card share panel, README",
+    "test": "npm run test:claims -- --grep @claim:share-reopen",
+    "sandbox": "change every sample control, create the QR link, and reopen it in a separate browser context"
+  },
+  {
+    "id": "settings-only-share",
+    "claim": "Standard share links leave out WAV audio.",
+    "where": "landing facts, card share panel, privacy, README",
+    "test": "npm test -- --testNamePattern @claim:settings-only-share",
+    "sandbox": "encode a card containing WAV data both with and without the explicit includeAudio option"
+  },
+  {
+    "id": "wav-local",
+    "claim": "The demo renders and downloads a WAV on the device.",
+    "where": "card action, privacy, README",
+    "test": "npm run test:claims -- --grep @claim:wav-local",
+    "sandbox": "render sample audio, verify the RIFF/WAVE file, and assert no external request occurs during rendering"
+  },
+  {
+    "id": "local-save-delete",
+    "claim": "Cards can be saved and deleted locally while demo data stays separate from real data.",
+    "where": "landing facts, demo banner, privacy, README",
+    "test": "npm run test:claims -- --grep @claim:local-save-delete",
+    "sandbox": "seed a real-data sentinel, save and delete a demo card, reset the sample, and prove the sentinel is unchanged"
+  },
+  {
+    "id": "offline-shell",
+    "claim": "The card maker works offline after the first visit.",
+    "where": "offline status, README",
+    "test": "npm run test:claims -- --grep @claim:offline-shell",
+    "sandbox": "fresh browser context; warm the demo and service worker, go offline, reload, and verify the ready card"
+  },
+  {
+    "id": "local-private",
+    "claim": "The site uses no accounts, analytics, advertising cookies, or third-party runtime services.",
+    "where": "landing limits, privacy, README",
+    "test": "npm run test:claims -- --grep @claim:local-private",
+    "sandbox": "fresh demo context; record a full save/share/export flow, origins, cookies, and browser storage keys"
+  },
+  {
+    "id": "package-outputs",
+    "claim": "The MIT package ships ESM, CommonJS, declarations, CSS, schema, and the format guide.",
+    "where": "landing install section, README",
+    "test": "npm run test:claims -- --grep @claim:package-outputs",
+    "sandbox": "install the built tarball in a clean project, require CommonJS, and inspect installed artifact files and license metadata"
+  },
+  {
+    "id": "versioned-schema",
+    "claim": "Version 1 validation rejects unknown versions and damaged share codes.",
+    "where": "landing install section, format guide, README",
+    "test": "npm test -- --testNamePattern @claim:versioned-schema",
+    "sandbox": "validate a future-version card and decode a damaged code; assert clear failures"
+  },
+  {
+    "id": "accessible-widget",
+    "claim": "The widget works by keyboard and has accessible native controls.",
+    "where": "landing install section, README",
+    "test": "npm run test:claims -- --grep @claim:accessible-widget",
+    "sandbox": "demo data; operate range and toggle by keyboard, inspect focus, and run axe WCAG A/AA"
+  },
+  {
+    "id": "licensed-audio",
+    "claim": "Including audio requires creator, source, and license details.",
+    "where": "landing install section, terms, format guide, README",
+    "test": "npm test -- --testNamePattern @claim:licensed-audio",
+    "sandbox": "validate an audio attachment with missing rights fields and assert each required-field error"
+  },
+  {
+    "id": "json-import",
+    "claim": "Valid JSON cards open, while invalid files leave the current card unchanged.",
+    "where": "card import control",
+    "test": "npm run test:claims -- --grep @claim:json-import",
+    "sandbox": "demo data; import a valid boundary card, then a malformed file, and compare the visible card after each"
+  }
+]

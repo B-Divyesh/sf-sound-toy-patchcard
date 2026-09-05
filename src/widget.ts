@@ -1,4 +1,3 @@
-import qrcode from 'qrcode-generator';
 import { updateParameter, validatePatch } from './format';
 import { buildShareUrl } from './share';
 import type { PatchCard, PatchParameter, PatchValue, PatchcardWidget, WidgetOptions } from './types';
@@ -54,26 +53,26 @@ export function mountPatchcard(target: Element, options: WidgetOptions): Patchca
   target.innerHTML = `
     <div class="patchcard__sheet">
       <header class="patchcard__header">
-        <span class="patchcard__eyebrow">Sound specimen · v1</span>
+        <span class="patchcard__eyebrow">Sound card · format v1</span>
         <h2 data-pc-name>${escape(patch.name)}</h2>
-        <p>Observed in <strong data-pc-toy>${escape(patch.toy.name)}</strong></p>
+        <p>Made in <strong data-pc-toy>${escape(patch.toy.name)}</strong></p>
       </header>
       <figure class="patchcard__waveform">
         <svg viewBox="0 0 600 160" role="img" aria-labelledby="${waveTitleId}"><title id="${waveTitleId}">Waveform sketch for ${escape(patch.name)}</title><line x1="0" y1="80" x2="600" y2="80"/><path data-pc-wave d="${waveformPath(makeWaveform(patch))}"/></svg>
-        <figcaption>A visual fingerprint; the parameters below are the exact recipe.</figcaption>
+        <figcaption>This waveform is a preview. The controls below store the exact values.</figcaption>
       </figure>
       <div class="patchcard__parameters" data-pc-parameters>${patch.parameters.map(parameterControl).join('')}</div>
-      <div class="patchcard__status" data-pc-status role="status" aria-live="polite">Ready to preserve.</div>
+      <div class="patchcard__status" data-pc-status role="status" aria-live="polite">Card ready.</div>
       <div class="patchcard__actions">
-        <button type="button" class="patchcard__primary" data-pc-action="save">Save specimen</button>
+        <button type="button" class="patchcard__primary" data-pc-action="save">Save card</button>
         <button type="button" data-pc-action="json">Export JSON</button>
         <button type="button" data-pc-action="share">Copy share link</button>
         <button type="button" data-pc-action="print">Print card</button>
         ${options.renderAudio ? '<button type="button" data-pc-action="audio">Render WAV</button>' : ''}
       </div>
-      <section class="patchcard__travel" data-pc-travel hidden aria-label="Take it with you">
+      <section class="patchcard__travel" data-pc-travel hidden aria-label="Share this card">
         <div data-pc-qr aria-hidden="true"></div>
-        <div><strong>Take it with you</strong><p>Scan on another device. The link contains parameters only—never the WAV.</p></div>
+        <div><strong>Share this card</strong><p>Scan on another device. The link contains settings and leaves out WAV audio.</p></div>
       </section>
     </div>`;
 
@@ -116,7 +115,8 @@ export function mountPatchcard(target: Element, options: WidgetOptions): Patchca
     }
   };
 
-  const showQr = (url: string) => {
+  const showQr = async (url: string) => {
+    const { default: qrcode } = await import('qrcode-generator');
     const qr = qrcode(0, 'M');
     qr.addData(url);
     qr.make();
@@ -131,17 +131,17 @@ export function mountPatchcard(target: Element, options: WidgetOptions): Patchca
     const action = button.dataset.pcAction;
     if (action === 'save') {
       const saved = options.onSave?.(structuredClone(patch));
-      if (saved === false) setStatus('This specimen needs attention before it can be saved.', 'error');
-      else setStatus('Specimen saved locally.', 'success');
+      if (saved === false) setStatus('Enter the missing information before saving this card.', 'error');
+      else setStatus('Card saved in this browser.', 'success');
     } else if (action === 'json') {
       download(new Blob([JSON.stringify(patch, null, 2)], { type: 'application/json' }), fileName(patch.name, 'patchcard.json'));
       setStatus('JSON exported.', 'success');
     } else if (action === 'share') {
       try {
         const url = buildShareUrl(patch, options.shareBaseUrl);
-        showQr(url);
+        await showQr(url);
         await navigator.clipboard.writeText(url);
-        setStatus('Private-by-default share link copied.', 'success');
+        setStatus('Settings link copied.', 'success');
       } catch (error) {
         const qrVisible = !target.querySelector<HTMLElement>('[data-pc-travel]')!.hidden;
         setStatus(qrVisible ? 'QR is ready. Your browser blocked clipboard access.' :
@@ -155,9 +155,9 @@ export function mountPatchcard(target: Element, options: WidgetOptions): Patchca
       try {
         const blob = await options.renderAudio(structuredClone(patch));
         download(blob, fileName(patch.name, 'wav'));
-        setStatus('WAV rendered locally.', 'success');
-      } catch (error) {
-        setStatus(`WAV could not be rendered. ${error instanceof Error ? error.message : 'Try again.'}`, 'error');
+        setStatus('WAV rendered on this device.', 'success');
+      } catch {
+        setStatus('WAV could not be rendered. Check the sound toy and try again.', 'error');
       } finally {
         button.disabled = false;
       }
@@ -178,7 +178,7 @@ export function mountPatchcard(target: Element, options: WidgetOptions): Patchca
       target.querySelector<HTMLElement>('[data-pc-toy]')!.textContent = patch.toy.name;
       controls.innerHTML = patch.parameters.map(parameterControl).join('');
       draw();
-      setStatus('Specimen opened.', 'success');
+      setStatus('Card opened.', 'success');
     },
     setParameter(id, value) {
       patch = updateParameter(patch, id, value);

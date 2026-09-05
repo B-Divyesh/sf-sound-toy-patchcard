@@ -1,18 +1,23 @@
 # Patchcard
 
-Patchcard is a tiny, typed library for preserving a browser sound as an open,
-portable card: named parameters, a waveform sketch, a private-by-default share
-link, a QR code, JSON export, print layout, and an optional local WAV render.
-It is for playful audio tools and workshops that need recall without exposing
-people to DAW preset formats or uploading their recordings.
+Patchcard saves browser sound settings as an open card. It is for sound-toy
+users and workshop leaders who need to reopen, print, or share exact values
+without learning music production software.
 
-[Live documentation and demo](https://sound-toy-patchcard.sociobot.in)
+[Try the isolated sample](https://sound-toy-patchcard.sociobot.in/demo/)
 
 ## Install
 
+Install the tested 0.1.0 tarball served by the product site:
+
 ```sh
-npm install @sociobot/patchcard
+npm install https://sound-toy-patchcard.sociobot.in/downloads/sociobot-patchcard-0.1.0.tgz
 ```
+
+The tarball includes ESM, CommonJS, type declarations, widget CSS, the JSON
+Schema, the format guide, and the MIT license. Factory maintainers can publish
+that tarball later with `npm publish`; this repository does not hold registry
+credentials.
 
 ## Use the format
 
@@ -28,9 +33,12 @@ const patch = createPatch({
   ]
 });
 
-const portable = encodePatch(patch); // URL-safe; recordings are excluded
+const portable = encodePatch(patch);
 const restored = decodePatch(portable);
 ```
+
+The standard encoder leaves out audio. Passing `{ includeAudio: true }`
+requires complete creator, source, and license fields.
 
 ## Embed the widget
 
@@ -44,7 +52,6 @@ const widget = mountPatchcard(document.querySelector('#patch')!, {
     synth.apply(next.parameters);
   },
   async renderAudio(next) {
-    // Render locally in your toy. Nothing is uploaded by Patchcard.
     return synth.renderWav(next.parameters);
   }
 });
@@ -53,44 +60,57 @@ widget.setParameter('pitch', 330);
 widget.destroy();
 ```
 
-The package exports ESM, CommonJS, type declarations, and its widget CSS. The
-widget uses light DOM so hosts can style the documented `--patchcard-*` custom
-properties. A host may set `shareBaseUrl`; otherwise links point to the current
-page. Embedded audio requires `license`, `creator`, and `source` metadata, but
-is never included by `encodePatch` unless `includeAudio: true` is explicit.
+The widget uses light DOM. Its `--patchcard-*` custom properties are listed at
+the top of the shipped CSS. A host can set `shareBaseUrl`; otherwise links
+point to the current page.
 
-## Patch format
+## Format and privacy
 
-Every document has `format: "patchcard"` and `version: 1`. Parameter IDs are
-stable machine keys; labels may change. Decoders reject unknown versions rather
-than guessing. See [`docs/format.md`](docs/format.md) and the JSON Schema at
-[`schema/patchcard-v1.schema.json`](schema/patchcard-v1.schema.json).
+Every card has `format: "patchcard"` and `version: 1`. Decoders reject
+unknown versions. See [the format guide](docs/format.md) and
+[the JSON Schema](schema/patchcard-v1.schema.json).
+
+The site has no account, analytics, or hosted card database. Real cards and
+sample cards use separate browser storage keys. Share links contain settings
+and omit audio unless a library caller explicitly includes licensed audio.
+See the [privacy page](https://sound-toy-patchcard.sociobot.in/privacy/).
+
+After the first visit, the card maker reloads and works offline.
 
 ## Develop and verify
 
-Requires Node.js 20 or newer.
+Use Node.js 20 or newer. Playwright 1.58.2 is pinned.
 
 ```sh
-npm install
+npm ci
 npm test
-npm run build       # library + site -> dist/, site root -> dist/site/
-npm run build:site  # documentation/demo only -> dist/site/
-npm run test:release # confirms dist/site/release.json identifies this commit
-npm pack --dry-run
+npm run build
+npm run test:claims
+npm run test:a11y
+npm run check
 ```
 
-`npm run dev` starts the site. The demo stores cards only in browser
-`localStorage`; clear them from the Saved specimens panel at any time. The
-service worker makes the installed shell available offline.
+`npm run build` creates the library in `dist/`, the complete site in
+`dist/site/`, and an installable tarball in `dist/site/downloads/`.
+The browser suites start a local production server. To test the deployed site:
+
+```sh
+PATCHCARD_TEST_URL=https://sound-toy-patchcard.sociobot.in npm run test:claims
+PATCHCARD_TEST_URL=https://sound-toy-patchcard.sociobot.in npm run test:a11y
+PATCHCARD_RELEASE_URL=https://sound-toy-patchcard.sociobot.in npm run test:release
+```
+
+Every public product claim and its command are listed in
+[.factory/claims.json](.factory/claims.json). Demo storage and reset behavior
+are documented in [.factory/demo.md](.factory/demo.md).
 
 ## Deploy
 
-Deploy `dist/site` as a static site with `index.html` at its root. The build
-also emits `release.json`, which records the source commit and repair release
-identifier for deployment verification. No server, account, analytics, fonts,
-or payment integration is needed.
+Deploy `dist/site` as the static-site root. It includes route files, the
+designed 404 response configuration, security headers, cache rules, and
+`release.json`. No server, database, payment service, or secret is needed.
 
 ## License
 
-MIT. Audio attached by library users retains the license declared in its
-`audio.license` field; Patchcard does not relicense it.
+Patchcard is available under the [MIT license](LICENSE). Audio remains under
+the license declared by its creator.

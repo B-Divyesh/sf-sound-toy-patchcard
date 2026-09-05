@@ -13,8 +13,8 @@ const expectedCommit = process.env.PATCHCARD_RELEASE_REVISION
   ?? execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
 
 if (identity.product !== 'sound-toy-patchcard'
-  || identity.release !== 'repair-2'
-  || identity.baseCandidate !== '8b818d73a9267e3d08c08292f29d9092f471d955'
+  || identity.release !== 'repair-3'
+  || identity.baseCandidate !== 'd0e97e0da1009118789040c9b982c90f1030f47b'
   || identity.commit !== expectedCommit) {
   throw new Error(`Unexpected release identity: ${JSON.stringify(identity)}`);
 }

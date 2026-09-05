@@ -4,26 +4,44 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f3eedc">
-  <meta name="description" content="Patchcard privacy policy: local-first storage, no analytics, and no hosted audio.">
+  <meta name="description" content="How Patchcard stores cards locally, handles share links, and responds to privacy requests.">
+  <link rel="canonical" href="https://sound-toy-patchcard.sociobot.in/privacy/">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="stylesheet" href="/legal.css">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Privacy — Patchcard">
+  <meta property="og:description" content="How Patchcard stores cards locally and handles share links.">
+  <meta property="og:url" content="https://sound-toy-patchcard.sociobot.in/privacy/">
+  <meta property="og:image" content="https://sound-toy-patchcard.sociobot.in/patchcard-share.webp">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Privacy — Patchcard">
+  <meta name="twitter:description" content="How Patchcard stores cards locally and handles share links.">
+  <meta name="twitter:image" content="https://sound-toy-patchcard.sociobot.in/patchcard-share.webp">
   <title>Privacy — Patchcard</title>
 </head>
 <body>
-  <a class="skip" data-skip-link href="#content">Skip to content</a>
-  <header><a href="/">⌁ Patchcard</a><nav aria-label="Legal navigation"><a aria-current="page" href="/privacy/">Privacy</a><a href="/terms/">Terms</a></nav></header>
+  <a class="skip" data-skip-link href="#content">Skip to privacy details</a>
+  <header>
+    <a class="wordmark" href="/" aria-label="Patchcard home"><span aria-hidden="true">⌁</span> Patchcard</a>
+    <nav aria-label="Primary navigation"><a href="/demo/">Demo</a><a href="/#format">Install</a><a aria-current="page" href="/privacy/">Privacy</a></nav>
+  </header>
   <main id="content" tabindex="-1">
-    <p class="kicker">Field note · legal</p>
-    <h1>Privacy</h1>
-    <p class="updated">Effective August 27, 2026</p>
-    <section><h2>The short version</h2><p>Patchcard works locally. We do not run analytics, place advertising cookies, create accounts, or receive your cards, audio, or browser storage.</p></section>
-    <section><h2>What stays on your device</h2><p>The demo saves named cards in your browser’s local storage when you choose “Save specimen.” Audio previews and WAV exports are generated in your browser. You can delete one card or clear all cards from the Saved specimens panel.</p></section>
-    <section><h2>What a share link contains</h2><p>A share link places the card’s name, toy metadata, parameters, and waveform data directly in the URL. WAV audio is excluded by default. Anyone you send the URL to can read those settings, so avoid putting personal information in card names or descriptions.</p></section>
-    <section><h2>Network and third parties</h2><p>The deployed site does not need third-party scripts, fonts, analytics, or storage services. Your hosting provider may keep ordinary server access logs; its policy governs those logs. Links to GitHub or npm take you to their services.</p></section>
-    <section><h2>Your choices</h2><p>You may use the library entirely offline, export JSON, delete local cards, or clear site data in your browser. Because we do not receive your cards, we cannot retrieve or delete a copy for you.</p></section>
-    <a class="back" href="/">← Return to the workbench</a>
+    <p class="kicker">Privacy</p>
+    <h1>How Patchcard handles your data</h1>
+    <p class="updated">Effective September 5, 2026</p>
+    <section><h2>The short version</h2><p>Patchcard stores saved cards in your browser. The site has no accounts, analytics, advertising cookies, or hosted card database.</p></section>
+    <section><h2>Cards and demo data</h2><p>Real cards use one browser storage area. The demo uses a separate sample area and deletes it when you start for real.</p></section>
+    <section><h2>Audio and exports</h2><p>Audio previews and WAV files are made on your device. Patchcard does not upload them.</p></section>
+    <section><h2>Share links</h2><p>A share link contains the card name, toy details, controls, and waveform data. It leaves out WAV audio by default.</p><p>Anyone with the link can read those settings. Do not put personal information in card names or descriptions.</p></section>
+    <section><h2>Network requests</h2><p>The site loads no third-party scripts, fonts, analytics, or storage services. The hosting provider may keep ordinary access logs.</p></section>
+    <section><h2>Your privacy choices</h2><p>You can delete cards in the app or clear this site’s browser data. We cannot retrieve or delete data we never receive.</p></section>
+    <a class="back" href="/">Return to Patchcard</a>
   </main>
-  <footer>Patchcard · open source under the MIT license</footer>
+  <footer>
+    <div><a class="wordmark" href="/">⌁ Patchcard</a><p>Save and reopen browser sound settings.</p><p class="build-id">v0.1.0 · repair 3 · Built by Param Factory</p></div>
+    <nav aria-label="Footer navigation"><a href="/demo/">Demo</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="https://github.com/B-Divyesh/sf-sound-toy-patchcard">Source code <span class="visually-hidden">on an external site</span><span aria-hidden="true">↗</span></a></nav>
+  </footer>
   <script defer src="/skip-link.js"></script>
 </body>
 </html>

@@ -11,5 +11,5 @@
     "noUncheckedIndexedAccess": true,
     "types": ["node", "vitest/globals"]
   },
-  "include": ["src", "site", "tests", "tsup.config.ts"]
+  "include": ["src", "site", "tests", "browser-tests", "playwright.config.ts", "tsup.config.ts"]
 }

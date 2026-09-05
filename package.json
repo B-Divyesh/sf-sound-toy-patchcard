@@ -34,14 +34,18 @@
     "dev": "vite --config site/vite.config.ts",
     "clean": "node scripts/clean.mjs",
     "build:lib": "tsup",
-    "build:site": "vite build --config site/vite.config.ts",
-    "build": "npm run clean && npm run build:lib && npm run build:site",
+    "build:site:app": "vite build --config site/vite.config.ts",
+    "build:download": "node scripts/build-download.mjs",
+    "build:site": "npm run build:lib && npm run build:site:app && npm run build:download",
+    "build": "npm run clean && npm run build:site",
     "test": "vitest run",
-    "test:a11y": "node scripts/verify-site.mjs",
+    "test:claims": "playwright test browser-tests/claims.spec.ts",
+    "test:a11y": "playwright test browser-tests/accessibility.spec.ts",
+    "test:browser": "playwright test",
     "test:release": "node scripts/verify-release-identity.mjs",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
-    "check": "npm run typecheck && npm test && npm run build && npm run test:release && npm pack --dry-run"
+    "check": "npm run typecheck && npm test && npm run build && npm run test:browser && npm run test:release && npm pack --dry-run"
   },
   "engines": {
     "node": ">=20"
@@ -54,6 +58,8 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "1.58.2",
+    "@types/jsdom": "^27.0.0",
     "@types/node": "^24.3.0",
     "jsdom": "^26.1.0",
     "playwright": "^1.58.2",

@@ -3,7 +3,7 @@
 ## Direction: botanical field guide
 
 Patchcard treats an ephemeral browser sound like a field specimen: observed,
-named, annotated, pressed into a portable card, then re-grown somewhere else.
+named, annotated, and preserved in a portable card.
 The page borrows the restraint of a naturalist's folio—warm paper, ink rules,
 specimen numbers, handwritten annotations—without imitating a museum website.
 Waveforms become leaf venation and parameter controls become labeled measures.
@@ -51,11 +51,11 @@ removed below 500px.
 
 - Sliders are measuring stems: a solid fern fill with visible numeric readout.
 - Every edit redraws the waveform immediately and labels the card “unsaved.”
-- Save actions stamp the specimen number and move a small paper layer upward.
-- Opening a shared URL is framed as “re-growing” the patch; import errors keep
-  the current work intact and explain how to recover.
-- QR and print belong to a folded “Take it with you” tray, since they are
-  transport actions rather than editing actions.
+- Save actions update a plain status line and add the named card to the list.
+- Opening a shared URL restores the settings; import errors keep the current
+  card intact and explain what to do next.
+- QR and print appear in the share section because they move settings between
+  devices or onto paper.
 
 ## Motion
 
@@ -72,6 +72,11 @@ is catalogued among pressed leaves. It has no text, logo, or UI screenshot, so
 all functional copy remains real HTML. Source generated on 2026-08-27 with the
 factory `gen-image.sh` deployment and converted locally to WebP. The product
 uses only this generated asset and hand-authored CSS/SVG icons.
+
+For repair 3, `site/public/patchcard-share.webp` is a deterministic center
+crop of that original art at exactly 1200×630. The three PNG app icons are
+deterministic square crops of the same owned art. No new model output or
+external reference was used.
 
 Final generation prompt:
 

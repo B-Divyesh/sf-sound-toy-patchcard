@@ -5,8 +5,8 @@ import { defineConfig } from 'vite';
 
 const release = {
   product: 'sound-toy-patchcard',
-  release: 'repair-2',
-  baseCandidate: '8b818d73a9267e3d08c08292f29d9092f471d955',
+  release: 'repair-3',
+  baseCandidate: 'd0e97e0da1009118789040c9b982c90f1030f47b',
   commit: process.env.PATCHCARD_RELEASE_REVISION
     ?? execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim()
 };
@@ -22,6 +22,8 @@ export default defineConfig({
     rollupOptions: {
       input: {
         index: resolve(import.meta.dirname, 'index.html'),
+        demo: resolve(import.meta.dirname, 'demo/index.html'),
+        notFound: resolve(import.meta.dirname, '404.html'),
         privacy: resolve(import.meta.dirname, 'privacy/index.html'),
         terms: resolve(import.meta.dirname, 'terms/index.html')
       }

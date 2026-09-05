@@ -35,8 +35,8 @@
 .patchcard__range { display: grid; grid-template-columns: 1fr 72px; align-items: center; gap: 12px; }
 .patchcard__range input { width: 100%; accent-color: var(--patchcard-accent); min-height: 44px; }
 .patchcard__range output { color: var(--patchcard-muted); font-variant-numeric: tabular-nums; text-align: right; }
-.patchcard__toggle { display: flex; align-items: center; justify-content: space-between; min-height: 44px; font-weight: 700; }
-.patchcard__toggle input { position: absolute; opacity: 0; }
+.patchcard__toggle { position: relative; display: flex; align-items: center; justify-content: space-between; min-height: 44px; font-weight: 700; }
+.patchcard__toggle input { position: absolute; z-index: 1; right: 0; width: 52px; height: 44px; margin: 0; opacity: 0; cursor: pointer; }
 .patchcard__switch { width: 52px; height: 28px; border: 2px solid var(--patchcard-ink); border-radius: 20px; position: relative; }
 .patchcard__switch::after { content: ""; position: absolute; top: 4px; left: 4px; width: 16px; height: 16px; border-radius: 50%; background: var(--patchcard-ink); transition: transform 180ms ease; }
 .patchcard__toggle input:checked + .patchcard__switch { background: var(--patchcard-accent); }

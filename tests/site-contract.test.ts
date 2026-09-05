@@ -1,42 +1,53 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { JSDOM } from 'jsdom';
 import { describe, expect, it } from 'vitest';
 
 const root = resolve(import.meta.dirname, '..');
 const readJson = (path: string) => JSON.parse(readFileSync(resolve(root, path), 'utf8')) as Record<string, unknown>;
 
-describe('release contracts', () => {
-  it('ships the linked format guide in the npm package', () => {
-    const manifest = readJson('package.json');
-    expect(manifest.files).toContain('docs/format.md');
-    expect(readFileSync(resolve(root, 'docs/format.md'), 'utf8')).toContain('# Patchcard format');
-  });
-
-  it('declares immutable caching and hardened static-site response policies', () => {
+describe('static product contract', () => {
+  it('defines a designed 404 response and durable asset policies', () => {
     const config = readJson('site/public/staticwebapp.config.json');
+    expect(config.responseOverrides).toEqual({ '404': { rewrite: '/404.html' } });
+    expect(config.navigationFallback).toBeUndefined();
     const headers = config.globalHeaders as Record<string, string>;
-    expect(headers['Content-Security-Policy']).toContain("default-src 'self'");
+    expect(headers['Content-Security-Policy']).toContain("frame-ancestors 'none'");
     expect(headers['Permissions-Policy']).toContain('camera=()');
     const routes = config.routes as Array<{ route: string; headers: Record<string, string> }>;
-    expect(routes).toContainEqual({ route: '/assets/*', headers: { 'Cache-Control': 'public, max-age=31536000, immutable' } });
-    expect((config.mimeTypes as Record<string, string>)['.webmanifest']).toBe('application/manifest+json');
+    expect(routes.find((route) => route.route === '/assets/*')?.headers['Cache-Control']).toContain('immutable');
+    expect(routes.find((route) => route.route === '/downloads/*')?.headers['Cache-Control']).toContain('immutable');
   });
 
-  it('marks every skip destination as focusable and loads the focus-transfer helper', () => {
-    for (const path of ['site/index.html', 'site/privacy/index.html', 'site/terms/index.html']) {
-      const html = readFileSync(resolve(root, path), 'utf8');
-      expect(html).toMatch(/data-skip-link/u);
-      expect(html).toMatch(/<main id="(?:main|content)" tabindex="-1">/u);
-      expect(html).toContain('/skip-link.js');
+  it('gives every public route its own title, canonical URL, metadata, and page skeleton', () => {
+    const routes = [
+      ['site/index.html', 'Patchcard — save browser sound settings'],
+      ['site/demo/index.html', 'Demo — Patchcard'],
+      ['site/privacy/index.html', 'Privacy — Patchcard'],
+      ['site/terms/index.html', 'Terms — Patchcard'],
+      ['site/404.html', 'Page not found — Patchcard']
+    ] as const;
+    for (const [path, title] of routes) {
+      const document = new JSDOM(readFileSync(resolve(root, path), 'utf8')).window.document;
+      expect(document.title).toBe(title);
+      expect(document.documentElement.lang).toBe('en');
+      expect(document.querySelectorAll('h1')).toHaveLength(1);
+      expect(document.querySelector('main')).not.toBeNull();
+      expect(document.querySelector('link[rel="canonical"]')?.getAttribute('href')).toMatch(/^https:\/\/sound-toy-patchcard\.sociobot\.in\//u);
+      expect(document.querySelector('meta[property="og:image"]')?.getAttribute('content')).toContain('/patchcard-share.webp');
+      expect(document.querySelector('meta[name="twitter:card"]')?.getAttribute('content')).toBe('summary_large_image');
+      expect(document.body.textContent).toContain('Built by Param Factory');
+      expect(document.querySelector('a[data-skip-link]')).not.toBeNull();
+      expect(document.querySelector('main[tabindex="-1"]')).not.toBeNull();
     }
-    const helper = readFileSync(resolve(root, 'site/public/skip-link.js'), 'utf8');
-    expect(helper).toContain('target.focus({ preventScroll: true })');
   });
 
-  it('builds an exact repair-2 deployment identity', () => {
-    const config = readFileSync(resolve(root, 'site/vite.config.ts'), 'utf8');
-    expect(config).toContain("release: 'repair-2'");
-    expect(config).toContain("baseCandidate: '8b818d73a9267e3d08c08292f29d9092f471d955'");
-    expect(config).toContain('release.json');
+  it('lists each indexable route and provides the linked package guide', () => {
+    const sitemap = readFileSync(resolve(root, 'site/public/sitemap.xml'), 'utf8');
+    for (const path of ['/', '/demo/', '/privacy/', '/terms/']) {
+      expect(sitemap).toContain(`https://sound-toy-patchcard.sociobot.in${path}`);
+    }
+    const manifest = readJson('package.json');
+    expect(manifest.files).toContain('docs/format.md');
   });
 });

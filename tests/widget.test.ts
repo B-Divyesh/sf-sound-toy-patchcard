@@ -41,7 +41,7 @@ describe('mountPatchcard', () => {
     root.querySelector<HTMLButtonElement>('[data-pc-action="save"]')!.click();
     const status = root.querySelector<HTMLElement>('[data-pc-status]')!;
     expect(status.dataset.state).toBe('error');
-    expect(status.textContent).toMatch(/needs attention/u);
+    expect(status.textContent).toMatch(/missing information/u);
     widget.destroy();
   });
 });
