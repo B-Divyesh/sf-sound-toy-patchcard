@@ -20,6 +20,9 @@ for (const [path, title] of routes) {
     await expect(page.locator('h1')).toHaveCount(1);
     await expect(page.locator('main')).toHaveCount(1);
     expect(await page.locator('img:not([alt])').count()).toBe(0);
+    expect(await page.locator('button').evaluateAll((buttons) => buttons.filter((button) =>
+      !(button.innerText || '').trim() && !button.getAttribute('aria-label')
+    ).length)).toBe(0);
     await page.keyboard.press('Tab');
     await expect(page.locator('[data-skip-link]')).toBeFocused();
     await page.keyboard.press('Enter');
